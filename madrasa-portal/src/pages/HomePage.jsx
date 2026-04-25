@@ -220,7 +220,7 @@ export default function HomePage() {
                           </div>
                           {donors > 0 && (
                             <p className="text-xs text-text-muted mt-1 font-inter">
-                              {donors} {donors !== 1 ? t('donations') : t('donation')}
+                              {donors} {donors !== 1 ? t('donationCount') : t('donation')}
                             </p>
                           )}
                         </div>
