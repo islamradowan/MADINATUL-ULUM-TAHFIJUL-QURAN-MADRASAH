@@ -25,7 +25,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
-app.use(cors({ origin: "https://madinatul-ulum-tahfijul-quran-madra.vercel.app/" }));
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 // Routes
