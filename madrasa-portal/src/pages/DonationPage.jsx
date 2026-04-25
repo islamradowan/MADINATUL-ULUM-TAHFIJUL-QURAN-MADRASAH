@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { donationService } from '../services';
 import { PATHS } from '../routes/paths';
@@ -10,7 +10,7 @@ const METHODS = ['Card', 'bKash', 'Nagad', 'Cash'];
 export default function DonationPage() {
   const { t } = useLang();
 
-  const PROJECT_META = {
+  const PROJECT_META = useMemo(() => ({
     'Student Support': {
       title: t('donationProject1Title'),
       desc:  t('donationProject1Desc'),
@@ -38,7 +38,7 @@ export default function DonationPage() {
       to:    PATHS.DONATE_MADRASA,
       projectType: 'Madrasa Development',
     },
-  };
+  }), [t]);
 
   const [campaigns, setCampaigns]               = useState([]);
   const [projectsLoading, setProjectsLoading]   = useState(true);
@@ -71,7 +71,7 @@ export default function DonationPage() {
         setSelectedCampaign(fallback[0]);
       })
       .finally(() => setProjectsLoading(false));
-  }, []);
+  }, [PROJECT_META]);
 
   async function handleDonate(e) {
     e.preventDefault();

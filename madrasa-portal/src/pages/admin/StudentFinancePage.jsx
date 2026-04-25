@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { studentService, reportService, programService } from '../../services';
+import { reportService, programService } from '../../services';
 import { useStudents } from '../../context/StudentContext';
 
 export default function StudentFinancePage() {

@@ -102,7 +102,7 @@ function PaymentModal({ entry, monthlyRate, onClose, onSave }) {
 export default function StudentDetailsPage() {
   const { id }   = useParams();
   const navigate = useNavigate();
-  const { invalidate, updateCached } = useStudents();
+  const { updateCached } = useStudents();
 
   const [student,     setStudent]     = useState(null);
   const [loading,     setLoading]     = useState(true);

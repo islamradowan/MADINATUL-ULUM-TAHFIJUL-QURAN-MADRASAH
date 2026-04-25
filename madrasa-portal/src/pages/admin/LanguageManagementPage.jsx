@@ -8,7 +8,7 @@ function nsFromKey(key) {
   if (key.startsWith('about'))           return 'About Page';
   if (key.startsWith('hero') || key.startsWith('why') || key.startsWith('feature') ||
       key.startsWith('active') || key.startsWith('stat') || key.startsWith('project') ||
-      key.startsWith('raised') || key.startsWith('donation') && !key.startsWith('donationH'))
+      key.startsWith('raised') || (key.startsWith('donation') && !key.startsWith('donationH')))
                                           return 'Home Page';
   if (key.startsWith('admission'))       return 'Admission Page';
   if (key.startsWith('contact'))         return 'Contact Page';
@@ -45,7 +45,7 @@ const ALL_KEYS = Object.keys(translations.en).map((key) => ({
 const NAMESPACES = [...new Set(ALL_KEYS.map((k) => k.ns))].sort();
 
 export default function LanguageManagementPage() {
-  const { lang: activeLang, toggleLang, setCustomTranslations } = useLang();
+  const { setCustomTranslations } = useLang();
 
   // Load any saved overrides from localStorage as initial state
   const [overrides, setOverrides] = useState(() => {

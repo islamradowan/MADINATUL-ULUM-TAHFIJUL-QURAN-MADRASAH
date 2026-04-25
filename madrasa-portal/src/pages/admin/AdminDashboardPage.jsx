@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { dashboardService } from '../../services';
 
-const MONTH_NAMES = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
 const BAR_COLORS = [
   'bg-primary-container','bg-secondary-container','bg-tertiary-container',
   'bg-inverse-primary','bg-outline-variant',
