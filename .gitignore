@@ -1,0 +1,44 @@
+# ── Unnecessary project files ────────────────────────────
+madrasa_portal_md/
+ulum_madrasa_portal/
+stitch_madinatual_ulum_madrasa_portal.zip
+madrasa_brand.md
+New Text Document.txt
+
+# ── CSV exports ──────────────────────────────────────────
+*.csv
+
+# ── Environment variables ────────────────────────────────
+madrasa-backend/.env
+madrasa-portal/.env
+
+# ── Dependencies ─────────────────────────────────────────
+node_modules/
+madrasa-backend/node_modules/
+madrasa-portal/node_modules/
+
+# ── Production build ─────────────────────────────────────
+madrasa-portal/build/
+
+# ── Logs ─────────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ── OS files ─────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editor files ─────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ── Misc ─────────────────────────────────────────────────
+*.zip
+*.tar.gz
