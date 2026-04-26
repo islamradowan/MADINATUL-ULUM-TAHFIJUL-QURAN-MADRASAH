@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL,
+  baseURL: process.env.REACT_APP_API_BASE_URL || 'https://madinatul-ulum-tahfijul-quran-madrasah.onrender.com/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
