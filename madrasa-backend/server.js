@@ -23,6 +23,7 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   'http://localhost:3000',
+  'https://madinatul-ulum-tahfijul-quran-madra.vercel.app',
   process.env.FRONTEND_URL,
 ].filter(Boolean);
 app.use(cors({ origin: allowedOrigins, credentials: true }));
