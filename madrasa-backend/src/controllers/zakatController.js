@@ -64,7 +64,7 @@ const calculate = (req, res) => {
 // POST /api/zakat/donate
 const donate = async (req, res, next) => {
   try {
-    const { donorName, totalAmount, allocationType, paymentMethod } = req.body;
+    const { donorName, totalAmount, allocationType, projectType, paymentMethod } = req.body;
     if (!totalAmount || Number(totalAmount) <= 0)
       return res.status(400).json({ message: 'Invalid zakat amount' });
     if (!allocationType)
@@ -74,7 +74,8 @@ const donate = async (req, res, next) => {
       donorName:     donorName || 'Anonymous',
       totalAmount:   Number(totalAmount),
       allocationType,
-      paymentMethod: paymentMethod || 'Cash',
+      projectType:   projectType || undefined,
+      paymentMethod: paymentMethod || 'Card',
     });
     res.status(201).json(zakat);
   } catch (err) { next(err); }
@@ -83,11 +84,12 @@ const donate = async (req, res, next) => {
 // GET /api/zakat
 const getZakatRecords = async (req, res, next) => {
   try {
-    const { page = 1, limit = 10, search, status, allocationType, paymentMethod, dateFrom, dateTo } = req.query;
+    const { page = 1, limit = 10, search, status, allocationType, projectType, paymentMethod, dateFrom, dateTo } = req.query;
     const query = {};
     if (search)        query.donorName      = { $regex: search, $options: 'i' };
     if (status)        query.status         = status;
     if (allocationType) query.allocationType = allocationType;
+    if (projectType)   query.projectType    = projectType;
     if (paymentMethod) query.paymentMethod  = paymentMethod;
     if (dateFrom || dateTo) {
       query.date = {};

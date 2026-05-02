@@ -10,9 +10,7 @@ const NAV_ITEMS = [
   { key: 'studentFinance', icon: 'account_balance_wallet',  to: PATHS.ADMIN.STUDENT_FINANCE },
   { key: 'programs',       icon: 'school',                  to: PATHS.ADMIN.PROGRAMS        },
   { key: 'adminDonations', icon: 'volunteer_activism',      to: PATHS.ADMIN.DONATIONS       },
-  { key: 'adminZakat',     icon: 'payments',                to: PATHS.ADMIN.ZAKAT           },
   { key: 'reports',        icon: 'bar_chart',               to: PATHS.ADMIN.REPORTS         },
-  { key: 'transparency',   icon: 'visibility',              to: PATHS.ADMIN.TRANSPARENCY    },
   { key: 'language',       icon: 'translate',               to: PATHS.ADMIN.LANGUAGE        },
   { key: 'users',          icon: 'manage_accounts',         to: PATHS.ADMIN.USERS           },
   { key: 'settings',       icon: 'settings',                to: PATHS.ADMIN.SETTINGS        },
@@ -58,14 +56,14 @@ export default function AdminSidebar({ isOpen = false, onClose }) {
 
           <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0">
-            <span className="material-symbols-outlined text-gold icon-fill">school</span>
+            <span className="material-symbols-outlined text-gold icon-fill">volunteer_activism</span>
           </div>
           <div className="min-w-0 leading-snug">
-            <p className="text-[10px] font-extrabold text-gold font-manrope uppercase tracking-wide">
-              {lang === 'bn' ? 'মদিনাতুল উলুম তাহফিজুল' : 'MADINATUL ULUM TAHFIJUL'}
+            <p className="text-sm font-extrabold text-gold font-manrope uppercase tracking-wide">
+              {lang === 'bn' ? 'আন-নুসরাহ' : 'AN-NUSRAH'}
             </p>
-            <p className="text-[10px] font-extrabold text-gold font-manrope uppercase tracking-wide">
-              {lang === 'bn' ? 'কোরআন মাদ্রাসা' : 'QURAN MADRASAH'}
+            <p className="text-sm font-extrabold text-gold font-manrope uppercase tracking-wide">
+              {lang === 'bn' ? 'ফাউন্ডেশন' : 'FOUNDATION'}
             </p>
             <p className="text-xs text-emerald-100/70 mt-0.5">{t('adminPortal')}</p>
           </div>

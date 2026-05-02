@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { zakatService } from '../services';
+import { zakatService, paymentService } from '../services';
 import { useLang } from '../context/LanguageContext';
 
 const GOLD_RATE   = 9500;
@@ -14,13 +14,13 @@ export default function ZakatCalculatorPage() {
   const EMPTY = { cash: '', goldGrams: '', silverGrams: '', investments: '', businessGoods: '', receivables: '', debts: '' };
 
   const ALLOCATIONS = [
-    { key: t('zakatAlloc1'), icon: 'volunteer_activism', desc: t('zakatAlloc1Desc') },
-    { key: t('zakatAlloc2'), icon: 'school',             desc: t('zakatAlloc2Desc') },
-    { key: t('zakatAlloc3'), icon: 'home_repair_service',desc: t('zakatAlloc3Desc') },
-    { key: t('zakatAlloc4'), icon: 'menu_book',          desc: t('zakatAlloc4Desc') },
+    { key: 'Masjid and Madrasha Complex', icon: 'mosque', desc: 'Support construction of integrated Masjid and Madrasha complex' },
+    { key: 'An Nusrah Skill Development', icon: 'school', desc: 'Empower students with vocational and technical skills' },
+    { key: 'Poor Student Support', icon: 'volunteer_activism', desc: 'Provide financial aid to underprivileged students' },
+    { key: 'Ifter Fund', icon: 'restaurant', desc: 'Distribute Iftar meals during Ramadan' },
   ];
 
-  const METHODS = ['bKash', 'Nagad', 'Bank', 'Card', 'Cash'];
+  const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
   const ASSET_FIELDS = [
     { key: 'cash',         label: t('zakatFieldCash'),       hint: t('zakatFieldCashHint'),       icon: 'payments',        prefix: '৳', isDebt: false },
@@ -34,8 +34,8 @@ export default function ZakatCalculatorPage() {
 
   const [assets, setAssets]         = useState(EMPTY);
   const [result, setResult]         = useState(null);
-  const [allocation, setAllocation] = useState(t('zakatAlloc1'));
-  const [method, setMethod]         = useState('bKash');
+  const [allocation, setAllocation] = useState('Masjid and Madrasha Complex');
+  const [method, setMethod]         = useState('Card');
   const [donorName, setDonorName]   = useState('');
   const [donating, setDonating]     = useState(false);
   const [donated, setDonated]       = useState(false);
@@ -82,13 +82,17 @@ export default function ZakatCalculatorPage() {
     if (!amount || amount <= 0) { setDonateErr(t('zakatErrZero')); return; }
     setDonateErr(''); setDonating(true);
     try {
-      await zakatService.donate({
-        donorName:     donorName.trim() || 'Anonymous',
-        totalAmount:   amount,
+      const { data } = await paymentService.initPayment({
+        type: 'zakat',
+        amount,
+        donorName: donorName.trim() || 'Anonymous',
+        donorEmail: '',
+        donorPhone: '',
         allocationType: allocation,
+        projectType: allocation,
         paymentMethod: method,
       });
-      setDonated(true);
+      if (data.gatewayUrl) window.location.href = data.gatewayUrl;
     } catch (err) {
       setDonateErr(err.message);
     } finally {
@@ -256,7 +260,7 @@ export default function ZakatCalculatorPage() {
                 2.5% × ৳{fmt(displayResult.netWealth)} net wealth
               </p>
 
-              {/* Allocation */}
+              {/* Allocate To Campaign */}
               <div className="text-left mb-4 space-y-2">
                 <p className="text-xs font-semibold text-inverse-primary uppercase tracking-wider font-inter mb-2">{t('zakatAllocateTo')}</p>
                 {ALLOCATIONS.map(({ key, icon, desc }) => (
@@ -282,7 +286,7 @@ export default function ZakatCalculatorPage() {
               {/* Payment Method */}
               <div className="mb-4">
                 <p className="text-xs font-semibold text-inverse-primary uppercase tracking-wider font-inter mb-2 text-left">{t('zakatPaymentMethod')}</p>
-                <div className="grid grid-cols-5 gap-1.5">
+                <div className="grid grid-cols-4 gap-1.5">
                   {METHODS.map((m) => (
                     <button
                       key={m}

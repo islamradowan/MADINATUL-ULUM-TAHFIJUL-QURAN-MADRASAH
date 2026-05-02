@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { donationService } from '../services';
+import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
 
-const GOAL    = 1200000;
-const METHODS = ['bKash', 'Nagad', 'Bank', 'Card', 'Cash'];
+const GOAL    = 2000000;
+const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function MosqueDonationPage() {
   const { t } = useLang();
 
-  const EXP_PCTS = [0.25, 0.375, 0.208, 0.167];
+  const EXP_PCTS = [0.30, 0.35, 0.20, 0.15];
   const expenses = [
-    { icon: 'foundation',          title: t('mosqueExp1Title'), desc: t('mosqueExp1Desc'), pctVal: EXP_PCTS[0] },
-    { icon: 'architecture',        title: t('mosqueExp2Title'), desc: t('mosqueExp2Desc'), pctVal: EXP_PCTS[1] },
-    { icon: 'chair',               title: t('mosqueExp3Title'), desc: t('mosqueExp3Desc'), pctVal: EXP_PCTS[2] },
-    { icon: 'electrical_services', title: t('mosqueExp4Title'), desc: t('mosqueExp4Desc'), pctVal: EXP_PCTS[3] },
+    { icon: 'foundation',          title: t('masjidFoundation'), desc: t('masjidFoundationDesc'), pctVal: EXP_PCTS[0] },
+    { icon: 'architecture',        title: t('masjidBuilding'), desc: t('masjidBuildingDesc'), pctVal: EXP_PCTS[1] },
+    { icon: 'chair',               title: t('masjidInterior'), desc: t('masjidInteriorDesc'), pctVal: EXP_PCTS[2] },
+    { icon: 'electrical_services', title: t('masjidUtilities'), desc: t('masjidUtilitiesDesc'), pctVal: EXP_PCTS[3] },
   ];
 
   const [raised, setRaised]   = useState(0);
   const [donors, setDonors]   = useState(0);
   const [amount, setAmount]   = useState('500');
-  const [method, setMethod]   = useState('bKash');
+  const [method, setMethod]   = useState('Card');
   const [name, setName]       = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,7 +30,7 @@ export default function MosqueDonationPage() {
   useEffect(() => {
     donationService.getProjects()
       .then(({ data }) => {
-        const p = data.find((p) => p.projectType === 'Mosque Expansion');
+        const p = data.find((p) => p.projectType === 'Masjid and Madrasha Complex');
         if (p) { setRaised(p.raisedAmount ?? 0); setDonors(p.count ?? 0); }
       })
       .catch(() => {});
@@ -43,18 +43,24 @@ export default function MosqueDonationPage() {
     if (!amount || Number(amount) <= 0) { setError(t('mosqueErrAmount')); return; }
     setError(''); setSuccess(false); setLoading(true);
     try {
-      await donationService.create({
-        projectType:   'Mosque Expansion',
-        amount:        Number(amount),
-        donorName:     name || 'Anonymous',
+      // All methods go through SSLCommerz
+      const { data } = await paymentService.initPayment({
+        type: 'donation',
+        amount: Number(amount),
+        donorName: name || 'Anonymous',
+        donorEmail: '',
+        donorPhone: '',
+        projectType: 'Masjid and Madrasha Complex',
         paymentMethod: method,
       });
-      setSuccess(true);
-      setRaised((r) => r + Number(amount));
-      setDonors((d) => d + 1);
-      setName(''); setAmount('500');
+      if (data.gatewayUrl) {
+        window.location.href = data.gatewayUrl;
+      }
     } catch (err) {
-      setError(err.message);
+      const errorMsg = err.response?.data?.error === 'GATEWAY_TIMEOUT' 
+        ? 'Payment gateway is temporarily unavailable. Please try again later.'
+        : err.message;
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -75,25 +81,29 @@ export default function MosqueDonationPage() {
         <div className="flex items-center gap-2 text-sm text-text-muted font-inter mb-8">
           <Link to={PATHS.DONATE} className="hover:text-primary-container transition-colors">{t('mosqueBreadcrumbParent')}</Link>
           <span className="material-symbols-outlined text-sm">chevron_right</span>
-          <span className="text-primary-container font-semibold">{t('mosqueBreadcrumbCurrent')}</span>
+          <span className="text-primary-container font-semibold">{t('campaignMasjidTitle')}</span>
         </div>
 
         {/* Hero */}
         <div className="relative bg-surface-base rounded-xl overflow-hidden shadow-ambient mb-12 border border-border-subtle">
-          <div className="h-64 bg-primary-container relative overflow-hidden">
+          <div className="h-80 md:h-96 bg-primary-container relative overflow-hidden">
             <img
               src="https://images.unsplash.com/photo-1600814832809-579119f47045?w=800&q=80"
-              alt="Grand Mosque"
+              alt="Masjid and Madrasha Complex"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent" />
-            <div className="absolute bottom-8 left-8 right-8">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="material-symbols-outlined text-secondary-fixed text-sm">construction</span>
-                <span className="text-xs font-semibold text-secondary-fixed tracking-widest uppercase font-inter">{t('mosqueActiveProject')}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/80 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="material-symbols-outlined text-secondary text-lg">construction</span>
+                <span className="text-xs font-bold text-secondary tracking-widest uppercase font-ubuntu">{t('campaignMasjidTag')}</span>
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold font-manrope text-white mb-2">{t('mosqueHeroTitle')}</h1>
-              <p className="text-base text-surface-container-high max-w-2xl font-inter">{t('mosqueHeroDesc')}</p>
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-ubuntu text-white mb-3 leading-tight max-w-4xl">
+                {t('campaignMasjidTitle')}
+              </h1>
+              <p className="text-sm md:text-base text-white/90 max-w-3xl font-ubuntu leading-relaxed">
+                {t('campaignMasjidDesc')}
+              </p>
             </div>
           </div>
         </div>
@@ -134,7 +144,7 @@ export default function MosqueDonationPage() {
           <div className="bg-primary-container rounded-xl p-8 shadow-ambient-lg flex flex-col justify-center text-center">
             <span className="material-symbols-outlined text-secondary-fixed text-5xl mb-4 mx-auto icon-fill">volunteer_activism</span>
             <h3 className="text-xl font-semibold font-manrope text-white mb-4">{t('mosqueSupportTitle')}</h3>
-            <p className="text-sm text-primary-fixed-dim mb-8 font-inter italic">{t('mosqueSupportHadith')}</p>
+            <p className="text-sm text-primary-fixed-dim mb-8 font-inter italic">{t('masjidHadith')}</p>
 
             {success && (
               <div className="mb-4 bg-success-green/20 text-white rounded-lg px-4 py-3 text-sm font-inter flex items-center gap-2">
@@ -154,7 +164,7 @@ export default function MosqueDonationPage() {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-white/10 border border-white/20 text-white placeholder-white/50 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary-fixed font-inter"
               />
-              <div className="grid grid-cols-5 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 {METHODS.map((m) => (
                   <button key={m} type="button" onClick={() => setMethod(m)}
                     className={`py-2 rounded-lg text-xs font-semibold font-inter transition-colors ${

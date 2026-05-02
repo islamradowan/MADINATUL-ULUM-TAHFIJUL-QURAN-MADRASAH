@@ -1,27 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { donationService } from '../services';
+import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
 
-const GOAL    = 150000;
-const METHODS = ['bKash', 'Nagad', 'Bank', 'Card', 'Cash'];
+const GOAL    = 200000;
+const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function MadrasaDonationPage() {
   const { t } = useLang();
 
-  const EXP_PCTS = [0.40, 0.20, 0.25, 0.15];
+  const EXP_PCTS = [0.35, 0.30, 0.20, 0.15];
   const expenses = [
-    { icon: 'school',             title: t('madrasaExp1Title'), desc: t('madrasaExp1Desc'), pctVal: EXP_PCTS[0] },
-    { icon: 'local_library',      title: t('madrasaExp2Title'), desc: t('madrasaExp2Desc'), pctVal: EXP_PCTS[1] },
-    { icon: 'workspace_premium',  title: t('madrasaExp3Title'), desc: t('madrasaExp3Desc'), pctVal: EXP_PCTS[2] },
-    { icon: 'bed',                title: t('madrasaExp4Title'), desc: t('madrasaExp4Desc'), pctVal: EXP_PCTS[3] },
+    { icon: 'school',             title: t('skillVocational'), desc: t('skillVocationalDesc'), pctVal: EXP_PCTS[0] },
+    { icon: 'local_library',      title: t('skillMaterials'), desc: t('skillMaterialsDesc'), pctVal: EXP_PCTS[1] },
+    { icon: 'workspace_premium',  title: t('skillCertification'), desc: t('skillCertificationDesc'), pctVal: EXP_PCTS[2] },
+    { icon: 'bed',                title: t('skillFacilities'), desc: t('skillFacilitiesDesc'), pctVal: EXP_PCTS[3] },
   ];
 
   const [raised, setRaised]   = useState(0);
   const [donors, setDonors]   = useState(0);
   const [amount, setAmount]   = useState('250');
-  const [method, setMethod]   = useState('bKash');
+  const [method, setMethod]   = useState('Card');
   const [name, setName]       = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -30,7 +30,7 @@ export default function MadrasaDonationPage() {
   useEffect(() => {
     donationService.getProjects()
       .then(({ data }) => {
-        const p = data.find((p) => p.projectType === 'Madrasa Development');
+        const p = data.find((p) => p.projectType === 'An Nusrah Skill Development');
         if (p) { setRaised(p.raisedAmount ?? 0); setDonors(p.count ?? 0); }
       })
       .catch(() => {});
@@ -43,16 +43,16 @@ export default function MadrasaDonationPage() {
     if (!amount || Number(amount) <= 0) { setError(t('madrasaErrAmount')); return; }
     setError(''); setSuccess(false); setLoading(true);
     try {
-      await donationService.create({
-        projectType:   'Madrasa Development',
-        amount:        Number(amount),
-        donorName:     name.trim() || 'Anonymous',
+      const { data } = await paymentService.initPayment({
+        type: 'donation',
+        amount: Number(amount),
+        donorName: name.trim() || 'Anonymous',
+        donorEmail: '',
+        donorPhone: '',
+        projectType: 'An Nusrah Skill Development',
         paymentMethod: method,
       });
-      setSuccess(true);
-      setRaised((r) => r + Number(amount));
-      setDonors((d) => d + 1);
-      setName(''); setAmount('250');
+      if (data.gatewayUrl) window.location.href = data.gatewayUrl;
     } catch (err) {
       setError(err.message);
     } finally {
@@ -75,25 +75,29 @@ export default function MadrasaDonationPage() {
         <div className="flex items-center gap-2 text-sm text-text-muted font-inter mb-8">
           <Link to={PATHS.DONATE} className="hover:text-primary-container transition-colors">{t('madrasaBreadcrumbParent')}</Link>
           <span className="material-symbols-outlined text-sm">chevron_right</span>
-          <span className="text-primary-container font-semibold">{t('madrasaBreadcrumbCurrent')}</span>
+          <span className="text-primary-container font-semibold">{t('campaignSkillTitle')}</span>
         </div>
 
         {/* Hero */}
         <div className="relative bg-surface-base rounded-xl overflow-hidden shadow-ambient mb-12 border border-border-subtle">
-          <div className="h-64 bg-primary-container relative overflow-hidden">
+          <div className="h-80 md:h-96 bg-primary-container relative overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1681140965121-a9e3689e28c3?w=800&q=80"
-              alt="Madrasa Development"
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
+              alt="Skill Development Training"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-container to-transparent" />
-            <div className="absolute bottom-8 left-8 right-8">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="material-symbols-outlined text-secondary-fixed text-sm">construction</span>
-                <span className="text-xs font-semibold text-secondary-fixed tracking-widest uppercase font-inter">{t('madrasaSupport')}</span>
+            <div className="absolute inset-0 bg-gradient-to-t from-primary-container via-primary-container/80 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="material-symbols-outlined text-secondary text-lg">construction</span>
+                <span className="text-xs font-bold text-secondary tracking-widest uppercase font-ubuntu">{t('campaignSkillTag')}</span>
               </div>
-              <h1 className="text-3xl md:text-5xl font-bold font-manrope text-white mb-2">{t('madrasaHeroTitle')}</h1>
-              <p className="text-base text-surface-container-high max-w-2xl font-inter">{t('madrasaHeroDesc')}</p>
+              <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold font-ubuntu text-white mb-3 leading-tight max-w-4xl">
+                {t('campaignSkillTitle')}
+              </h1>
+              <p className="text-sm md:text-base text-white/90 max-w-3xl font-ubuntu leading-relaxed">
+                {t('campaignSkillDesc')}
+              </p>
             </div>
           </div>
         </div>
@@ -133,8 +137,8 @@ export default function MadrasaDonationPage() {
           {/* Donate CTA */}
           <div className="bg-primary-container rounded-xl p-8 shadow-ambient-lg flex flex-col justify-center text-center">
             <span className="material-symbols-outlined text-secondary-fixed text-5xl mb-4 mx-auto icon-fill">volunteer_activism</span>
-            <h3 className="text-xl font-semibold font-manrope text-white mb-4">{t('madrasaWhyTitle')}</h3>
-            <p className="text-sm text-primary-fixed-dim mb-8 font-inter italic">{t('madrasaHeroDesc')}</p>
+            <h3 className="text-xl font-semibold font-manrope text-white mb-4">{t('madrasaFormTitle')}</h3>
+            <p className="text-sm text-primary-fixed-dim mb-8 font-inter italic">{t('skillHadith')}</p>
 
             {success && (
               <div className="mb-4 bg-success-green/20 text-white rounded-lg px-4 py-3 text-sm font-inter flex items-center gap-2">
@@ -154,7 +158,7 @@ export default function MadrasaDonationPage() {
                 onChange={(e) => setName(e.target.value)}
                 className="w-full bg-white/10 border border-white/20 text-white placeholder-white/50 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-1 focus:ring-secondary-fixed font-inter"
               />
-              <div className="grid grid-cols-5 gap-1.5">
+              <div className="grid grid-cols-4 gap-1.5">
                 {METHODS.map((m) => (
                   <button key={m} type="button" onClick={() => setMethod(m)}
                     className={`py-2 rounded-lg text-xs font-semibold font-inter transition-colors ${

@@ -1,6 +1,6 @@
-# Madinatul Ulum Tahfijul Quran Madrasah — Portal
+# An-Nusrah Foundation — Portal
 
-A full-stack web portal for **Madinatul Ulum Tahfijul Quran Madrasah**, Barishal, Bangladesh. It serves both the public (donations, zakat, transparency) and the institution's admin team (student management, finance, reports).
+A full-stack web portal for **An-Nusrah Foundation**, Barishal, Bangladesh. It serves both the public (donations, zakat) and the institution's admin team (student management, finance, reports).
 
 ---
 
@@ -57,12 +57,12 @@ Emon/
 | About | `/about` | Mission, vision, heritage |
 | Admission | `/admission` | Programs, requirements, inquiry form |
 | Donations | `/donate` | All active campaigns |
-| Madrasa Fund | `/donate/madrasa` | Dynamic expense breakdown |
-| Mosque Fund | `/donate/mosque` | Dynamic expense breakdown |
-| Student Support | `/donate/student-support` | Dynamic fund allocation |
+| Masjid Complex | `/donate/mosque` | Masjid and Madrasha Complex building fund |
+| Skill Development | `/donate/madrasa` | An Nusrah Skill Development program |
+| Student Support | `/donate/student-support` | Poor Student Support fund |
+| Ifter Fund | `/donate/ifter-fund` | Ramadan Iftar distribution |
 | Zakat Calculator | `/zakat` | Shariah-compliant zakat calculator with payment |
 | Gallery | `/gallery` | Photo gallery with category filters |
-| Transparency | `/transparency` | Live financial charts & documents |
 | Contact | `/contact` | Contact form |
 
 ### Admin Portal (`/admin`)
@@ -77,7 +77,6 @@ Emon/
 | Reports | `/admin/reports` | Summary reports |
 | Export | `/admin/reports/export` | CSV export |
 | Programs | `/admin/programs` | Manage class/program list |
-| Transparency | `/admin/transparency` | Manage public transparency data |
 | Language | `/admin/language` | Edit all EN/BN UI translations |
 | Users | `/admin/users` | User management with role control |
 | Settings | `/admin/settings` | Portal settings |
@@ -104,7 +103,6 @@ Emon/
 | PUT/DELETE | `/api/users/:id` | Update / delete user |
 | GET | `/api/dashboard` | Dashboard stats |
 | GET | `/api/reports` | Report data |
-| GET | `/api/transparency` | Public transparency data |
 | GET | `/api/programs` | Program list |
 | POST | `/api/contact` | Submit contact form |
 | GET | `/api/health` | Health check |
@@ -218,13 +216,14 @@ The portal supports **English** and **বাংলা (Bengali)**. All UI string
 
 ## Donation Campaigns
 
-Three active campaigns with dynamic fund allocation:
+Four active campaigns with dynamic fund allocation:
 
 | Campaign | Goal |
 |---|---|
-| Madrasa Development Fund | ৳1,50,000 |
-| Mosque Expansion Fund | ৳12,00,000 |
-| Student Support Fund | ৳1,20,000 |
+| Masjid and Madrasha Complex | ৳20,00,000 |
+| An Nusrah Skill Development | ৳2,00,000 |
+| Poor Student Support | ৳1,50,000 |
+| Ifter Fund | ৳1,00,000 |
 
 Expense/allocation breakdowns on each campaign page update in real time based on total donations raised.
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { donationService, dashboardService } from '../services';
 import { PATHS } from '../routes/paths';
@@ -7,39 +7,84 @@ import { useLang } from '../context/LanguageContext';
 export default function HomePage() {
   const { t } = useLang();
   const [projects, setProjects] = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [error, setError]       = useState(null);
-  const [stats, setStats]       = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Refs for scroll animation
+  const donationFormRef = useRef(null);
+  const servicesRef = useRef(null);
+  const projectsRef = useRef(null);
+  const statsRef = useRef(null);
 
   useEffect(() => {
     donationService.getProjects()
       .then(({ data }) => setProjects(data))
-      .catch((err) => setError(err.message))
+      .catch(() => {})
       .finally(() => setLoading(false));
     dashboardService.getStats().then(({ data }) => setStats(data)).catch(() => {});
   }, []);
 
+  // Scroll animation observer
+  useEffect(() => {
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate-fade-in-up');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    const elements = [
+      donationFormRef.current,
+      servicesRef.current,
+      projectsRef.current,
+      statsRef.current
+    ].filter(Boolean);
+
+    elements.forEach(el => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+
   const PROJECT_META = {
-    'Madrasa Development': {
-      goal: 150000,
-      to: PATHS.DONATE_MADRASA,
-      img: 'https://images.unsplash.com/photo-1681140965121-a9e3689e28c3?w=800&q=80',
-      title: t('projectMadrasaTitle'),
-      desc: t('projectMadrasaDesc'),
-    },
-    'Mosque Expansion': {
-      goal: 1200000,
+    'Masjid and Madrasha Complex': {
+      goal: 2000000,
       to: PATHS.DONATE_MOSQUE,
       img: 'https://images.unsplash.com/photo-1600814832809-579119f47045?w=800&q=80',
-      title: t('projectMosqueTitle'),
-      desc: t('projectMosqueDesc'),
+      title: t('campaignMasjidTitle'),
+      desc: t('campaignMasjidDesc'),
+      tag: t('campaignInfraTag'),
     },
-    'Student Support': {
-      goal: 120000,
+    'Poor Student Support': {
+      goal: 150000,
       to: PATHS.DONATE_SUPPORT,
-      img: 'https://images.unsplash.com/photo-1542967139-b45bb326ec87?w=800&q=80',
-      title: t('projectSupportTitle'),
-      desc: t('projectSupportDesc'),
+      img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
+      title: t('campaignPoorStudentTitle'),
+      desc: t('campaignPoorStudentDesc'),
+      tag: t('campaignEducationTag'),
+    },
+    'An Nusrah Skill Development': {
+      goal: 200000,
+      to: PATHS.DONATE_MADRASA,
+      img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80',
+      title: t('campaignSkillTitle'),
+      desc: t('campaignSkillDesc'),
+      tag: t('campaignSkillsTag'),
+    },
+    'Ifter Fund': {
+      goal: 100000,
+      to: PATHS.DONATE_IFTER,
+      img: 'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?w=800&q=80',
+      title: t('campaignIfterTitle'),
+      desc: t('campaignIfterDesc'),
+      tag: t('campaignFoodTag'),
     },
   };
 
@@ -48,214 +93,295 @@ export default function HomePage() {
       icon: 'school',
       title: t('featureTeacherTitle'),
       desc: t('featureTeacherDesc'),
-      bg: 'bg-primary-container/10',
-      iconColor: 'text-primary-container',
+    },
+    {
+      icon: 'volunteer_activism',
+      title: t('featureEnvTitle'),
+      desc: t('featureEnvDesc'),
     },
     {
       icon: 'menu_book',
       title: t('featureHifzTitle'),
       desc: t('featureHifzDesc'),
-      bg: 'bg-secondary/10',
-      iconColor: 'text-secondary',
-    },
-    {
-      icon: 'mosque',
-      title: t('featureEnvTitle'),
-      desc: t('featureEnvDesc'),
-      bg: 'bg-success-green/10',
-      iconColor: 'text-success-green',
     },
   ];
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-surface-alt min-h-[600px] flex items-center py-20 overflow-hidden">
-        <div className="absolute inset-0 opacity-5 pointer-events-none islamic-pattern" />
-        <div className="max-w-container-max mx-auto px-4 md:px-6 w-full relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="flex flex-col gap-6">
-            <div className="inline-flex items-center gap-2 bg-charity-gold-light/50 px-4 py-2 rounded-full w-fit">
-              <span className="material-symbols-outlined text-secondary text-sm">location_on</span>
-              <span className="text-xs font-semibold text-secondary uppercase tracking-widest font-inter">{t('heroLocation')}</span>
-            </div>
-            <div className="space-y-4">
-              <h1 className="font-manrope font-bold text-primary-container leading-tight">
-                <span className="block text-2xl md:text-3xl font-normal opacity-90 mb-2">
-                  মদিনাতুল উলুম তাহফিজুল কোরআন মাদ্রাসা
-                </span>
-                <span className="text-3xl md:text-5xl">MADINATUL ULUM TAHFIJUL QURAN MADRASAH</span>
-              </h1>
-              <p className="text-lg text-on-surface-variant max-w-xl font-inter">
-                {t('heroDesc')}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4 mt-2">
+      {/* Hero Section */}
+      <section className="relative bg-gradient-to-br from-primary-container via-primary to-primary-container text-white py-16 lg:py-24 overflow-hidden">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-secondary rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-gold rounded-full blur-3xl"></div>
+        </div>
+        
+        {/* Hero Image/Banner */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=1920&q=80"
+            alt="Madrasa Students"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container/85 via-primary-container/75 to-primary-container/70"></div>
+        </div>
+
+        <div className="container mx-auto px-4 md:px-6 max-w-container-max relative z-10">
+          <div className="max-w-3xl">
+            <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight font-ubuntu">
+              {t('heroLocation') === 'Barishal, Bangladesh' ? (
+                <>
+                  <span className="block">আন-নুসরাহ</span>
+                  <span className="block">ফাউন্ডেশন</span>
+                </>
+              ) : (
+                <>
+                  <span className="block">AN-NUSRAH</span>
+                  <span className="block">FOUNDATION</span>
+                </>
+              )}
+            </h1>
+            <p className="text-base lg:text-lg opacity-90 mb-8 leading-relaxed max-w-2xl font-ubuntu">
+              {t('heroDesc')}
+            </p>
+            <div className="flex flex-wrap gap-4">
               <Link
-                to="/donate"
-                className="bg-primary-container text-white px-8 py-4 rounded-xl text-base font-semibold hover:bg-primary transition-colors flex items-center gap-2 shadow-lg"
+                to={PATHS.DONATE}
+                className="bg-secondary hover:bg-secondary/90 px-8 py-3 rounded-lg text-primary font-bold transition-all flex items-center gap-2 shadow-lg"
               >
                 <span className="material-symbols-outlined icon-fill">volunteer_activism</span>
                 {t('donateNowBtn')}
               </Link>
               <Link
-                to="/zakat"
-                className="bg-white border-2 border-secondary text-secondary px-8 py-4 rounded-xl text-base font-semibold hover:bg-secondary/5 transition-colors flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined">calculate</span>
-                {t('zakatCalcBtn')}
-              </Link>
-              <Link
-                to="/admission"
-                className="bg-white text-primary-container border border-border-subtle px-6 py-4 rounded-xl text-base hover:bg-surface-container-low transition-colors flex items-center gap-2"
+                to={PATHS.ADMISSION}
+                className="bg-white/10 hover:bg-white hover:text-primary border border-white/20 px-8 py-3 rounded-lg text-white font-bold transition-all backdrop-blur-sm flex items-center gap-2"
               >
                 <span className="material-symbols-outlined">info</span>
                 {t('admissionInfoBtn')}
               </Link>
             </div>
           </div>
-          <div className="relative h-[400px] lg:h-[500px] w-full rounded-2xl overflow-hidden shadow-ambient-xl group">
-            <img
-              src="https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80"
-              alt="Students learning Quran"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-container/80 to-transparent flex items-end p-8">
-              <div className="text-white">
-                <p className="text-2xl font-semibold font-manrope mb-1">{t('heroImgCaption')}</p>
-                <p className="text-sm opacity-90">{t('heroImgSub')}</p>
-              </div>
+        </div>
+      </section>
+
+      {/* Compact Donation Quick Form */}
+      <section ref={donationFormRef} className="container mx-auto px-4 md:px-6 max-w-container-max -mt-10 relative z-20 opacity-0">
+        <div className="bg-secondary p-6 rounded-xl shadow-2xl">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div className="md:col-span-1">
+              <label className="block text-xs font-bold text-primary mb-1 uppercase opacity-80 font-inter">{t('quickDonationFund')}</label>
+              <select className="w-full border-none rounded text-sm py-3 px-4 focus:ring-2 focus:ring-primary font-inter">
+                <option>{t('campaignSkillTitle')}</option>
+                <option>{t('campaignMasjidTitle')}</option>
+                <option>{t('campaignPoorStudentTitle')}</option>
+              </select>
+            </div>
+            <div className="md:col-span-1">
+              <label className="block text-xs font-bold text-primary mb-1 uppercase opacity-80 font-inter">{t('quickDonationAmount')}</label>
+              <input
+                className="w-full border-none rounded text-sm py-3 px-4 focus:ring-2 focus:ring-primary font-inter"
+                placeholder={t('quickDonationAmount')}
+                type="number"
+              />
+            </div>
+            <div className="md:col-span-1">
+              <label className="block text-xs font-bold text-primary mb-1 uppercase opacity-80 font-inter">{t('quickDonationContact')}</label>
+              <input
+                className="w-full border-none rounded text-sm py-3 px-4 focus:ring-2 focus:ring-primary font-inter"
+                placeholder={t('quickDonationContact')}
+                type="text"
+              />
+            </div>
+            <div className="md:col-span-1">
+              <button className="w-full bg-primary text-white py-3 px-4 rounded font-bold hover:bg-opacity-90 transition-all shadow-lg font-inter">
+                {t('quickDonationBtn')}
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 bg-surface-base">
-        <div className="max-w-container-max mx-auto px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold font-manrope text-primary-container mb-4">{t('whyChooseUs')}</h2>
-            <p className="text-base text-on-surface-variant max-w-2xl mx-auto font-inter">
-              {t('whyChooseUsDesc')}
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map(({ icon, title, desc, bg, iconColor }) => (
-              <div
-                key={icon}
-                className="bg-surface rounded-2xl p-8 border border-border-subtle hover:shadow-ambient transition-all duration-300 group"
-              >
-                <div className={`w-12 h-12 ${bg} rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-container transition-colors`}>
-                  <span className={`material-symbols-outlined ${iconColor} group-hover:text-white transition-colors`}>{icon}</span>
+      {/* Simplified Services Row */}
+      <section ref={servicesRef} className="py-16 opacity-0">
+        <div className="container mx-auto px-4 md:px-6 max-w-container-max">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {features.map(({ icon, title, desc }) => (
+              <div key={icon} className="flex items-start gap-4 p-4 hover:bg-surface-alt rounded-lg transition-all">
+                <div className="bg-primary/5 p-3 rounded-full text-secondary shrink-0">
+                  <span className="material-symbols-outlined text-3xl">{icon}</span>
                 </div>
-                <h3 className="text-xl font-semibold font-manrope text-primary-container mb-3">{title}</h3>
-                <p className="text-sm text-on-surface-variant font-inter">{desc}</p>
+                <div>
+                  <h3 className="font-bold text-lg text-primary-container mb-1 font-manrope">{title}</h3>
+                  <p className="text-sm text-on-surface-variant leading-snug font-inter">{desc}</p>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Donation Projects */}
-      <section className="py-20 bg-surface-alt">
-        <div className="max-w-container-max mx-auto px-4 md:px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold font-manrope text-primary-container mb-4">{t('activeDonations')}</h2>
-            <p className="text-base text-on-surface-variant font-inter">{t('activeDonationsDesc')}</p>
+      {/* 3 Featured Projects */}
+      <section ref={projectsRef} className="py-16 bg-surface-alt pattern-bg opacity-0">
+        <div className="container mx-auto px-4 md:px-6 max-w-container-max">
+          <div className="flex justify-between items-end mb-10">
+            <div>
+              <h2 className="text-2xl lg:text-3xl font-extrabold text-primary-container font-ubuntu">{t('featuredProjectsTitle')}</h2>
+              <p className="text-on-surface-variant text-sm mt-1 font-ubuntu">{t('featuredProjectsDesc')}</p>
+            </div>
+            <Link to={PATHS.DONATE} className="text-primary-container font-bold text-sm hover:underline hidden sm:block font-ubuntu">
+              {t('viewAllProjects')} →
+            </Link>
           </div>
 
-          {loading && (
-            <div className="flex justify-center py-12">
-              <span className="material-symbols-outlined animate-spin text-4xl text-primary-container">progress_activity</span>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="bg-surface-base rounded-xl h-96 animate-pulse" />
+              ))}
             </div>
-          )}
+          ) : (
+            <div className="relative">
+              {/* Slider Container */}
+              <div className="overflow-hidden">
+                <div 
+                  className="flex transition-transform duration-500 ease-in-out"
+                  style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                >
+                  {(() => {
+                    const apiMap = Object.fromEntries(projects.map((p) => [p.projectType, p.raisedAmount ?? 0]));
+                    const cards = Object.entries(PROJECT_META).map(([type, meta]) => ({
+                      type,
+                      raised: apiMap[type] ?? 0,
+                      ...meta,
+                    }));
 
-          {error && (
-            <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-6 py-4 max-w-lg mx-auto">
-              <span className="material-symbols-outlined">error</span>
-              <p className="text-sm font-inter">{error}</p>
-            </div>
-          )}
-
-          {!loading && !error && (() => {
-            const apiMap = Object.fromEntries(projects.map((p) => [p.projectType, p.raisedAmount ?? 0]));
-            const cards  = Object.entries(PROJECT_META).map(([type, meta]) => ({
-              type,
-              raised: apiMap[type] ?? 0,
-              donors: projects.find((p) => p.projectType === type)?.count ?? 0,
-              ...meta,
-            }));
-
-            return (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {cards.map(({ type, raised, donors, goal, to, img, title, desc }) => {
-                  const pct = Math.min(Math.round((raised / goal) * 100), 100);
-                  return (
-                    <div key={type} className="bg-surface-base rounded-2xl border border-border-subtle overflow-hidden hover:shadow-ambient-lg transition-all duration-300 group flex flex-col">
-                      <div className="relative h-44 overflow-hidden">
-                        <img
-                          src={img}
-                          alt={title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary-container/60 to-transparent" />
-                        <span className="absolute bottom-3 left-4 text-xs font-semibold text-white bg-primary-container/70 backdrop-blur-sm px-3 py-1 rounded-full font-inter">
-                          {t('activeLabel')}
-                        </span>
-                      </div>
-
-                      <div className="p-6 flex flex-col flex-1">
-                        <h3 className="text-lg font-semibold font-manrope text-primary-container mb-2">{title}</h3>
-                        <p className="text-sm text-on-surface-variant font-inter mb-4 flex-1">{desc}</p>
-
-                        <div className="mb-4">
-                          <div className="flex justify-between text-xs text-on-surface-variant font-inter mb-1">
-                            <span className="font-semibold text-success-green">৳{raised.toLocaleString()} {t('raised')}</span>
-                            <span>{pct}% of ৳{goal.toLocaleString()}</span>
-                          </div>
-                          <div className="w-full bg-surface-container-low rounded-full h-2">
-                            <div
-                              className="bg-secondary h-2 rounded-full transition-all duration-700"
-                              style={{ width: `${pct}%` }}
+                    return cards.map(({ type, raised, goal, to, img, title, desc, tag }) => (
+                      <div key={type} className="w-full md:w-1/3 flex-shrink-0 px-2">
+                        <div className="bg-surface-base rounded-xl overflow-hidden shadow-ambient group h-full flex flex-col">
+                          <div className="relative overflow-hidden h-48">
+                            <img
+                              alt={title}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-all duration-500"
+                              src={img}
                             />
+                            <div className="absolute top-4 left-4 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider font-ubuntu">
+                              {tag}
+                            </div>
                           </div>
-                          {donors > 0 && (
-                            <p className="text-xs text-text-muted mt-1 font-inter">
-                              {donors} {donors !== 1 ? t('donationCount') : t('donation')}
-                            </p>
-                          )}
+                          <div className="p-6 flex flex-col flex-grow">
+                            <h3 className="text-xl font-bold mb-2 text-primary-container font-ubuntu">{title}</h3>
+                            <p className="text-on-surface-variant text-sm mb-6 line-clamp-2 font-ubuntu flex-grow">{desc}</p>
+                            <Link
+                              to={to}
+                              className="w-full inline-flex items-center justify-center border border-primary-container text-primary-container py-2 rounded font-bold text-sm hover:bg-primary-container hover:text-white transition-all"
+                            >
+                              {t('contributeBtn')}
+                            </Link>
+                          </div>
                         </div>
-
-                        <Link
-                          to={to}
-                          className="w-full inline-flex items-center justify-center gap-2 bg-primary-container text-white px-5 py-3 rounded-xl text-sm font-semibold hover:bg-primary transition-colors"
-                        >
-                          <span className="material-symbols-outlined text-base icon-fill">volunteer_activism</span>
-                          {t('donateNowBtn')}
-                        </Link>
                       </div>
-                    </div>
-                  );
-                })}
+                    ));
+                  })()}
+                </div>
               </div>
-            );
-          })()}
+
+              {/* Navigation Arrows */}
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev === 0 ? 1 : prev - 1))}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-all z-10"
+                aria-label="Previous slide"
+              >
+                <span className="material-symbols-outlined text-primary-container">chevron_left</span>
+              </button>
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev === 1 ? 0 : prev + 1))}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-3 shadow-lg hover:bg-gray-100 transition-all z-10"
+                aria-label="Next slide"
+              >
+                <span className="material-symbols-outlined text-primary-container">chevron_right</span>
+              </button>
+
+              {/* Dots Indicator */}
+              <div className="flex justify-center gap-2 mt-6">
+                {[0, 1].map((index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`w-2 h-2 rounded-full transition-all ${
+                      currentSlide === index ? 'bg-primary-container w-8' : 'bg-gray-300'
+                    }`}
+                    aria-label={`Go to slide ${index + 1}`}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Stats Banner */}
-      <section className="py-16 bg-primary-container text-white">
-        <div className="max-w-container-max mx-auto px-4 md:px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[
-            { value: stats ? `${stats.totalStudents}+` : '500+', label: t('statStudents') },
-            { value: stats ? `৳${Number(stats.totalDonations).toLocaleString()}` : '৳0', label: t('statDonations') },
-            { value: '6+',   label: t('statYears') },
-            { value: '100%', label: t('statQuran') },
-          ].map(({ value, label }) => (
-            <div key={label}>
-              <p className="text-4xl font-bold font-manrope text-secondary-fixed mb-2">{value}</p>
-              <p className="text-sm text-emerald-100/80 font-inter">{label}</p>
+      {/* Combined Stats & Join Us */}
+      <section ref={statsRef} className="py-16 bg-primary-container text-white overflow-hidden relative opacity-0">
+        <div className="absolute top-0 right-0 w-1/3 h-full opacity-5 pointer-events-none">
+          <svg className="w-full h-full" viewBox="0 0 100 100">
+            <circle cx="100" cy="50" fill="white" r="50" />
+          </svg>
+        </div>
+        <div className="container mx-auto px-4 md:px-6 max-w-container-max relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl font-extrabold mb-6 font-manrope">{t('joinJourneyTitle')}</h2>
+              <p className="text-white/70 mb-8 leading-relaxed font-inter">
+                {t('joinJourneyDesc')}
+              </p>
+              <div className="grid grid-cols-2 gap-8">
+                <div>
+                  <div className="text-3xl font-extrabold text-secondary font-manrope">
+                    {stats ? `${stats.totalStudents}+` : '500+'}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest font-bold opacity-60 font-inter">{t('statStudents')}</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-extrabold text-secondary font-manrope">
+                    {stats ? `৳${Number(stats.totalDonations).toLocaleString()}` : '৳0'}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest font-bold opacity-60 font-inter">{t('statDonations')}</div>
+                </div>
+              </div>
             </div>
-          ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Link
+                to={PATHS.DONATE}
+                className="bg-white/10 hover:bg-white/20 p-6 rounded-xl border border-white/10 transition-all group"
+              >
+                <span className="material-symbols-outlined text-secondary text-3xl mb-3 block">favorite</span>
+                <h4 className="font-bold text-lg font-manrope">{t('regularDonorTitle')}</h4>
+                <p className="text-sm text-white/50 font-inter">{t('regularDonorDesc')}</p>
+              </Link>
+              <Link
+                to={PATHS.CONTACT}
+                className="bg-white/10 hover:bg-white/20 p-6 rounded-xl border border-white/10 transition-all"
+              >
+                <span className="material-symbols-outlined text-secondary text-3xl mb-3 block">groups</span>
+                <h4 className="font-bold text-lg font-manrope">{t('volunteerTitle')}</h4>
+                <p className="text-sm text-white/50 font-inter">{t('volunteerDesc')}</p>
+              </Link>
+              <Link
+                to={PATHS.ADMISSION}
+                className="bg-white/10 hover:bg-white/20 p-6 rounded-xl border border-white/10 transition-all"
+              >
+                <span className="material-symbols-outlined text-secondary text-3xl mb-3 block">school</span>
+                <h4 className="font-bold text-lg font-manrope">{t('studentTitle')}</h4>
+                <p className="text-sm text-white/50 font-inter">{t('studentDesc')}</p>
+              </Link>
+              <Link
+                to={PATHS.ZAKAT}
+                className="bg-white/10 hover:bg-white/20 p-6 rounded-xl border border-white/10 transition-all"
+              >
+                <span className="material-symbols-outlined text-secondary text-3xl mb-3 block">calculate</span>
+                <h4 className="font-bold text-lg font-manrope">{t('zakatTitle')}</h4>
+                <p className="text-sm text-white/50 font-inter">{t('zakatDesc')}</p>
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
     </>

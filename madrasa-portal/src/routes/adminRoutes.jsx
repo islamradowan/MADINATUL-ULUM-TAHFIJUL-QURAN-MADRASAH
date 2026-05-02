@@ -5,14 +5,12 @@ import {
   StudentDetailsPage,
   StudentFinancePage,
   DonationOverviewPage,
-  ZakatManagementPage,
   ReportsPage,
   SettingsPage,
   UserManagementPage,
   ExportReportPage,
   LanguageManagementPage,
   ProgramManagementPage,
-  TransparencyManagementPage,
 } from './lazyPages';
 
 /**
@@ -24,68 +22,58 @@ const adminRoutes = [
   {
     path:    PATHS.ADMIN.DASHBOARD,
     element: <AdminDashboardPage />,
-    title:   'Dashboard | Madinatul Ulum Madrasah',
+    title:   'Dashboard | An-Nusrah Foundation',
   },
   {
     // Must be before :id so /finance doesn't match as an id
     path:    PATHS.ADMIN.STUDENT_FINANCE,
     element: <StudentFinancePage />,
-    title:   'Student Finance | Madinatul Ulum Madrasah',
+    title:   'Student Finance | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.STUDENTS,
     element: <StudentListPage />,
-    title:   'Students | Madinatul Ulum Madrasah',
+    title:   'Students | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.STUDENT_DETAIL,
     element: <StudentDetailsPage />,
-    title:   'Student Details | Madinatul Ulum Madrasah',
+    title:   'Student Details | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.DONATIONS,
     element: <DonationOverviewPage />,
-    title:   'Donations | Madinatul Ulum Madrasah',
-  },
-  {
-    path:    PATHS.ADMIN.ZAKAT,
-    element: <ZakatManagementPage />,
-    title:   'Zakat Management | Madinatul Ulum Madrasah',
+    title:   'Donations | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.REPORTS,
     element: <ReportsPage />,
-    title:   'Reports | Madinatul Ulum Madrasah',
+    title:   'Reports | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.SETTINGS,
     element: <SettingsPage />,
-    title:   'Settings | Madinatul Ulum Madrasah',
+    title:   'Settings | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.USERS,
     element: <UserManagementPage />,
-    title:   'User Management | Madinatul Ulum Madrasah',
+    title:   'User Management | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.EXPORT,
     element: <ExportReportPage />,
-    title:   'Export Report | Madinatul Ulum Madrasah',
+    title:   'Export Report | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.PROGRAMS,
     element: <ProgramManagementPage />,
-    title:   'Program Management | Madinatul Ulum Madrasah',
+    title:   'Program Management | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMIN.LANGUAGE,
     element: <LanguageManagementPage />,
-    title:   'Language Management | Madinatul Ulum Madrasah',
-  },
-  {
-    path:    PATHS.ADMIN.TRANSPARENCY,
-    element: <TransparencyManagementPage />,
-    title:   'Transparency Management | Madinatul Ulum Madrasah',
+    title:   'Language Management | An-Nusrah Foundation',
   },
 ];
 

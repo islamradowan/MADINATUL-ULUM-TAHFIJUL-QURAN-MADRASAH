@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:wght@400;500;600;700;800&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 @tailwind base;
@@ -7,13 +7,83 @@
 
 @layer base {
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Ubuntu Sans', 'Bornomala', sans-serif;
     background-color: #f9faf7;
     color: #1a1c1b;
     -webkit-font-smoothing: antialiased;
+    font-size: 18px;
   }
-  h1, h2, h3, h4 {
-    font-family: 'Manrope', sans-serif;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Ubuntu Sans', 'Bornomala', sans-serif;
+    font-weight: 700;
+  }
+  h1 {
+    font-size: 80px;
+    line-height: 80px;
+  }
+  h2 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  h3 {
+    font-size: 26px;
+    line-height: 36px;
+  }
+  h4 {
+    font-size: 22px;
+    line-height: 32px;
+  }
+  h5 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  h6 {
+    font-size: 18px;
+    line-height: 26px;
+  }
+  p {
+    font-size: 19px;
+    line-height: 32px;
+    font-weight: 400;
+  }
+  a {
+    font-size: 18px;
+  }
+  button {
+    font-size: 18px;
+  }
+  label {
+    font-size: 16px;
+  }
+  input, select, textarea {
+    font-size: 17px;
+  }
+  .text-xs {
+    font-size: 14px !important;
+  }
+  .text-sm {
+    font-size: 16px !important;
+  }
+  .text-base {
+    font-size: 18px !important;
+  }
+  .text-lg {
+    font-size: 20px !important;
+  }
+  .text-xl {
+    font-size: 22px !important;
+  }
+  .text-2xl {
+    font-size: 26px !important;
+  }
+  .text-3xl {
+    font-size: 32px !important;
+  }
+  .text-4xl {
+    font-size: 40px !important;
+  }
+  .text-5xl {
+    font-size: 52px !important;
   }
 }
 
@@ -38,5 +108,26 @@
       #755b00 75% 90%,
       #F1E6C5 90% 100%
     );
+  }
+  
+  /* Scroll Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  
+  .pattern-bg {
+    background-color: #fcfcfc;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l30 30-30 30-30-30z' fill='%230b3d2e' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
   }
 }

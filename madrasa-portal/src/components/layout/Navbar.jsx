@@ -11,7 +11,6 @@ const NAV_LINKS = [
   { labelKey: 'admission',    to: PATHS.ADMISSION    },
   { labelKey: 'donations',    to: PATHS.DONATE       },
   { labelKey: 'zakat',        to: PATHS.ZAKAT        },
-  { labelKey: 'transparency', to: PATHS.TRANSPARENCY },
   { labelKey: 'gallery',      to: PATHS.GALLERY      },
   { labelKey: 'contact',      to: PATHS.CONTACT      },
 ];
@@ -128,32 +127,34 @@ export default function Navbar() {
   return (
     <>
       {/* ── Main header bar ─────────────────────────────────────────────── */}
-      <header className="bg-white sticky top-0 z-50 border-b border-emerald-100 shadow-ambient">
-        <div className="flex items-center justify-between w-full px-4 md:px-6 py-3.5 max-w-[1200px] mx-auto gap-4">
+      <header className="relative z-50 pt-2 md:pt-4 pb-2" style={{ backgroundColor: 'rgb(10, 53, 43)' }}>
+        <div className="max-w-[1400px] mx-auto px-2 sm:px-4 md:px-8">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg md:shadow-xl border border-border-subtle/50">
+            <div className="flex items-center justify-between w-full px-3 sm:px-4 md:px-6 lg:px-8 py-3 md:py-4 gap-2 md:gap-4">
 
           {/* ── Logo ──────────────────────────────────────────────────── */}
           <Link
             to={PATHS.HOME}
-            className="flex items-center gap-2.5 flex-shrink-0 group"
-            aria-label="Madinatul Ulum Tahfijul Quran Madrasah — go to homepage"
+            className="flex items-center gap-1.5 sm:gap-2 md:gap-2.5 flex-shrink-0 group"
+            aria-label="An-Nusrah Foundation — go to homepage"
           >
             {/* Icon mark */}
-            <div className="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
-              <span className="material-symbols-outlined text-white text-xl icon-fill">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg md:rounded-xl bg-primary-container flex items-center justify-center flex-shrink-0 shadow-sm group-hover:shadow-md transition-shadow">
+              <span className="material-symbols-outlined text-white text-base sm:text-lg md:text-xl icon-fill">
                 mosque
               </span>
             </div>
             {/* Wordmark */}
-            <div className="leading-snug">
+            <div className="leading-tight sm:leading-snug">
               {lang === 'bn' ? (
                 <>
-                  <span className="block text-sm font-extrabold text-primary-container font-manrope tracking-tight">মদিনাতুল উলুম তাহফিজুল</span>
-                  <span className="block text-sm font-extrabold text-primary-container font-manrope tracking-tight">কোরআন মাদ্রাসা</span>
+                  <span className="block text-xs sm:text-sm md:text-base font-extrabold text-primary-container font-ubuntu tracking-tight">আন-নুসরাহ</span>
+                  <span className="block text-xs sm:text-sm md:text-base font-extrabold text-primary-container font-ubuntu tracking-tight">ফাউন্ডেশন</span>
                 </>
               ) : (
                 <>
-                  <span className="block text-sm font-extrabold text-primary-container font-manrope tracking-tight uppercase">MADINATUL ULUM TAHFIJUL</span>
-                  <span className="block text-sm font-extrabold text-primary-container font-manrope tracking-tight uppercase">QURAN MADRASAH</span>
+                  <span className="block text-xs sm:text-sm md:text-base font-extrabold text-primary-container font-ubuntu tracking-tight uppercase">An-Nusrah</span>
+                  <span className="block text-xs sm:text-sm md:text-base font-extrabold text-primary-container font-ubuntu tracking-tight uppercase">Foundation</span>
                 </>
               )}
             </div>
@@ -161,43 +162,52 @@ export default function Navbar() {
 
           {/* ── Desktop nav ───────────────────────────────────────────── */}
           <nav
-            className="hidden lg:flex items-center gap-1"
+            className="hidden lg:flex items-center gap-1 xl:gap-2"
             aria-label="Main navigation"
           >
             {NAV_LINKS.map(({ labelKey, to }) => (
-              <DesktopNavLink
+              <Link
                 key={to}
                 to={to}
-                label={t(labelKey)}
-                active={isActive(to)}
-              />
+                className={`
+                  relative text-sm xl:text-base font-medium px-2 xl:px-4 py-2 rounded-lg
+                  transition-all duration-200
+                  ${isActive(to)
+                    ? 'text-primary-container bg-emerald-50'
+                    : 'text-slate-700 hover:text-primary-container hover:bg-emerald-50'
+                  }
+                `}
+              >
+                {t(labelKey)}
+              </Link>
             ))}
           </nav>
 
           {/* ── Desktop actions ───────────────────────────────────────── */}
-          <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
+          <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             <LangToggle lang={lang} onToggle={toggleLang} />
 
             <Link
               to={PATHS.DONATE}
               className="
                 bg-primary-container text-white
-                px-5 py-2 rounded-lg text-sm font-semibold font-inter
+                px-3 xl:px-5 py-2 rounded-lg text-sm xl:text-base font-semibold font-ubuntu
                 hover:bg-primary transition-colors duration-200
                 shadow-sm hover:shadow-md
-                flex items-center gap-1.5
+                flex items-center gap-1 xl:gap-1.5
               "
             >
-              <span className="material-symbols-outlined text-base icon-fill">
+              <span className="material-symbols-outlined text-sm xl:text-base icon-fill">
                 volunteer_activism
               </span>
-              {t('donateNow')}
+              <span className="hidden xl:inline">{t('donateNow')}</span>
+              <span className="xl:hidden">Donate</span>
             </Link>
           </div>
 
           {/* ── Mobile right cluster ──────────────────────────────────── */}
-          <div className="lg:hidden flex items-center gap-2">
-            <LangToggle lang={lang} onToggle={toggleLang} />
+          <div className="lg:hidden flex items-center gap-1.5 sm:gap-2">
+            <LangToggle lang={lang} onToggle={toggleLang} className="text-[10px] sm:text-xs" />
 
             {/* Hamburger */}
             <button
@@ -206,17 +216,19 @@ export default function Navbar() {
               aria-expanded={menuOpen}
               aria-controls="mobile-drawer"
               className="
-                p-2 rounded-lg text-primary-container
+                p-1.5 sm:p-2 rounded-lg text-primary-container
                 hover:bg-emerald-50 transition-colors
                 flex items-center justify-center
               "
             >
-              <span className="material-symbols-outlined text-2xl">
+              <span className="material-symbols-outlined text-xl sm:text-2xl">
                 {menuOpen ? 'close' : 'menu'}
               </span>
             </button>
           </div>
 
+            </div>
+          </div>
         </div>
       </header>
 
@@ -258,13 +270,13 @@ export default function Navbar() {
             <div className="leading-snug">
               {lang === 'bn' ? (
                 <>
-                  <span className="block text-xs font-extrabold text-primary-container font-manrope">মদিনাতুল উলুম তাহফিজুল</span>
-                  <span className="block text-xs font-extrabold text-primary-container font-manrope">কোরআন মাদ্রাসা</span>
+                  <span className="block text-sm font-extrabold text-primary-container font-manrope">আন-নুসরাহ</span>
+                  <span className="block text-sm font-extrabold text-primary-container font-manrope">ফাউন্ডেশন</span>
                 </>
               ) : (
                 <>
-                  <span className="block text-xs font-extrabold text-primary-container font-manrope uppercase">MADINATUL ULUM TAHFIJUL</span>
-                  <span className="block text-xs font-extrabold text-primary-container font-manrope uppercase">QURAN MADRASAH</span>
+                  <span className="block text-sm font-extrabold text-primary-container font-manrope uppercase">An-Nusrah</span>
+                  <span className="block text-sm font-extrabold text-primary-container font-manrope uppercase">Foundation</span>
                 </>
               )}
             </div>
@@ -329,7 +341,7 @@ export default function Navbar() {
             {t('donateNow')}
           </Link>
           <p className="text-center text-[11px] text-slate-400 font-inter">
-            © {new Date().getFullYear()} মদিনাতুল উলুম তাহফিজুল কোরআন মাদ্রাসা
+            © {new Date().getFullYear()} An-Nusrah Foundation
           </p>
         </div>
       </div>

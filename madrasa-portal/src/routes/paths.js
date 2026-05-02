@@ -7,10 +7,13 @@ export const PATHS = {
   DONATE_MADRASA:  '/donate/madrasa',
   DONATE_MOSQUE:   '/donate/mosque',
   DONATE_SUPPORT:  '/donate/student-support',
+  DONATE_IFTER:    '/donate/ifter-fund',
   ZAKAT:           '/zakat',
   GALLERY:         '/gallery',
-  TRANSPARENCY:    '/transparency',
   CONTACT:         '/contact',
+  PAYMENT_SUCCESS: '/payment/success',
+  PAYMENT_FAIL:    '/payment/fail',
+  PAYMENT_CANCEL:  '/payment/cancel',
   NOT_FOUND:       '*',
 
   // ── Admin ────────────────────────────────────────────────
@@ -21,14 +24,12 @@ export const PATHS = {
     STUDENT_DETAIL:  '/admin/students/:id',
     STUDENT_FINANCE: '/admin/finance/students',
     DONATIONS:       '/admin/donations',
-    ZAKAT:           '/admin/zakat',
     REPORTS:         '/admin/reports',
     EXPORT:          '/admin/reports/export',
     SETTINGS:        '/admin/settings',
     USERS:           '/admin/users',
     LANGUAGE:        '/admin/language',
     PROGRAMS:        '/admin/programs',
-    TRANSPARENCY:    '/admin/transparency',
   },
 };
 

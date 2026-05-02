@@ -10,11 +10,9 @@ export default function Footer() {
     { label: t('footerLink2'), to: PATHS.ADMISSION },
     { label: t('footerLink3'), to: PATHS.ABOUT },
     { label: t('footerLink4'), to: PATHS.GALLERY },
-    { label: t('footerLink5'), to: PATHS.TRANSPARENCY },
   ];
 
   const infoLinks = [
-    { label: t('footerInfo1'), to: PATHS.TRANSPARENCY },
     { label: t('footerInfo2'), to: PATHS.GALLERY },
     { label: t('footerInfo3'), to: PATHS.ZAKAT },
   ];
@@ -31,9 +29,12 @@ export default function Footer() {
 
         {/* Brand */}
         <div className="flex flex-col gap-4">
-          <span className="text-xl font-bold font-manrope">মদিনাতুল উলুম তাহফিজুল কোরআন মাদ্রাসা</span>
+          <div className="leading-tight">
+            <span className="block text-xl font-bold font-manrope">An-Nusrah</span>
+            <span className="block text-xl font-bold font-manrope">Foundation</span>
+          </div>
           <p className="text-emerald-100/70 text-sm leading-relaxed max-w-xs">{t('footerTagline')}</p>
-          <p className="text-emerald-100/50 text-xs">© {new Date().getFullYear()} Madinatul Ulum Tahfijul Quran Madrasah. {t('footerLicense')}</p>
+          <p className="text-emerald-100/50 text-xs">© {new Date().getFullYear()} An-Nusrah Foundation. {t('footerLicense')}</p>
           <Link
             to={PATHS.ADMIN.LOGIN}
             className="inline-flex items-center gap-1.5 text-xs text-emerald-100/30 hover:text-emerald-100/70 transition-colors font-inter w-fit mt-1"

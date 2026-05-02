@@ -6,12 +6,18 @@ const STATUS_STYLES = {
   Pending:  'bg-[#fff8e6] text-secondary',
 };
 
-const PAYMENT_METHODS  = ['Card', 'bKash', 'Nagad', 'Bank', 'Cash'];
+const PAYMENT_METHODS  = ['Card', 'bKash', 'Nagad', 'Rocket'];
 const ALLOCATION_TYPES = [
   'General Fund (Most Needed)',
   'Student Sponsorship',
   'Madrasa Maintenance',
   'Islamic Education Materials',
+];
+const PROJECT_TYPES = [
+  'Masjid and Madrasha Complex',
+  'An Nusrah Skill Development',
+  'Poor Student Support',
+  'Ifter Fund',
 ];
 const LIMIT = 10;
 
@@ -30,6 +36,7 @@ export default function ZakatManagementPage() {
   const debounceRef                           = useRef(null);
   const [statusFilter,    setStatusFilter]    = useState('');
   const [allocFilter,     setAllocFilter]     = useState('');
+  const [projectFilter,   setProjectFilter]   = useState('');
   const [paymentFilter,   setPaymentFilter]   = useState('');
   const [dateFrom,        setDateFrom]        = useState('');
   const [dateTo,          setDateTo]          = useState('');
@@ -42,6 +49,7 @@ export default function ZakatManagementPage() {
       search:         debouncedSearch || undefined,
       status:         statusFilter    || undefined,
       allocationType: allocFilter     || undefined,
+      projectType:    projectFilter   || undefined,
       paymentMethod:  paymentFilter   || undefined,
       dateFrom:       dateFrom        || undefined,
       dateTo:         dateTo          || undefined,
@@ -52,7 +60,7 @@ export default function ZakatManagementPage() {
       })
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [page, debouncedSearch, statusFilter, allocFilter, paymentFilter, dateFrom, dateTo]);
+  }, [page, debouncedSearch, statusFilter, allocFilter, projectFilter, paymentFilter, dateFrom, dateTo]);
 
   useEffect(() => { fetchRecords(); }, [fetchRecords]);
 
@@ -62,10 +70,10 @@ export default function ZakatManagementPage() {
     debounceRef.current = setTimeout(() => setDebouncedSearch(val), 400);
   }
 
-  const hasFilters = search || statusFilter || allocFilter || paymentFilter || dateFrom || dateTo;
+  const hasFilters = search || statusFilter || allocFilter || projectFilter || paymentFilter || dateFrom || dateTo;
   function clearFilters() {
     setSearch(''); setDebouncedSearch('');
-    setStatusFilter(''); setAllocFilter(''); setPaymentFilter('');
+    setStatusFilter(''); setAllocFilter(''); setProjectFilter(''); setPaymentFilter('');
     setDateFrom(''); setDateTo('');
     setPage(1);
   }
@@ -176,6 +184,18 @@ export default function ZakatManagementPage() {
             ))}
           </select>
 
+          {/* Project Type */}
+          <select
+            value={projectFilter}
+            onChange={(e) => { setProjectFilter(e.target.value); setPage(1); }}
+            className="bg-surface border border-border-subtle rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary-container font-inter"
+          >
+            <option value="">All Categories</option>
+            {PROJECT_TYPES.map((p) => (
+              <option key={p} value={p}>{p.replace('Masjid and Madrasha Complex', 'Masjid Complex').replace('An Nusrah Skill Development', 'Skill Development')}</option>
+            ))}
+          </select>
+
           {/* Payment Method */}
           <select
             value={paymentFilter}
@@ -261,18 +281,18 @@ export default function ZakatManagementPage() {
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="bg-surface-container-low border-b border-border-subtle text-xs font-semibold text-text-muted uppercase tracking-wider font-inter">
-                {['Donor', 'Amount', 'Allocation', 'Payment', 'Date', 'Status'].map((h) => (
+                {['Donor', 'Amount', 'Allocation', 'Category', 'Payment', 'Date', 'Status'].map((h) => (
                   <th key={h} className="p-4 pl-6">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle text-sm font-inter">
               {loading ? (
-                <tr><td colSpan={6} className="py-12 text-center">
+                <tr><td colSpan={7} className="py-12 text-center">
                   <div className="inline-block w-8 h-8 rounded-full border-4 border-surface-container-high border-t-primary-container animate-spin" />
                 </td></tr>
               ) : records.length === 0 ? (
-                <tr><td colSpan={6} className="py-12 text-center">
+                <tr><td colSpan={7} className="py-12 text-center">
                   <div className="flex flex-col items-center gap-2 text-text-muted">
                     <span className="material-symbols-outlined text-4xl">search_off</span>
                     <p className="font-inter text-sm">{hasFilters ? 'No records match your filters.' : 'No records found.'}</p>
@@ -286,6 +306,7 @@ export default function ZakatManagementPage() {
                   <td className="p-4 pl-6 font-semibold text-primary">{r.donorName ?? 'Anonymous'}</td>
                   <td className="p-4 font-semibold text-primary">৳{Number(r.totalAmount).toLocaleString()}</td>
                   <td className="p-4 text-text-muted">{r.allocationType}</td>
+                  <td className="p-4 text-text-muted">{r.projectType || '—'}</td>
                   <td className="p-4 text-text-muted">{r.paymentMethod}</td>
                   <td className="p-4 text-text-muted">{r.date ? new Date(r.date).toLocaleDateString() : '—'}</td>
                   <td className="p-4">

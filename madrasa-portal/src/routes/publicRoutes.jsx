@@ -7,10 +7,13 @@ import {
   MadrasaDonationPage,
   MosqueDonationPage,
   StudentSupportDonationPage,
+  IfterFundDonationPage,
   ZakatCalculatorPage,
   PhotoGalleryPage,
-  TransparencyDashboardPage,
   ContactPage,
+  PaymentSuccessPage,
+  PaymentFailPage,
+  PaymentCancelPage,
 } from './lazyPages';
 
 /**
@@ -21,57 +24,72 @@ const publicRoutes = [
   {
     path:    PATHS.HOME,
     element: <HomePage />,
-    title:   'Home | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Home | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ABOUT,
     element: <AboutPage />,
-    title:   'About Us | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'About Us | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ADMISSION,
     element: <AdmissionPage />,
-    title:   'Admission | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Admission | An-Nusrah Foundation',
   },
   {
     path:    PATHS.DONATE,
     element: <DonationPage />,
-    title:   'Donate | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Donate | An-Nusrah Foundation',
   },
   {
     path:    PATHS.DONATE_MADRASA,
     element: <MadrasaDonationPage />,
-    title:   'Madrasa Development Fund | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Skill Development Fund | An-Nusrah Foundation',
   },
   {
     path:    PATHS.DONATE_MOSQUE,
     element: <MosqueDonationPage />,
-    title:   'Mosque Expansion Fund | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Masjid Complex Fund | An-Nusrah Foundation',
   },
   {
     path:    PATHS.DONATE_SUPPORT,
     element: <StudentSupportDonationPage />,
-    title:   'Student Support Fund | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Student Support Fund | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.DONATE_IFTER,
+    element: <IfterFundDonationPage />,
+    title:   'Ifter Fund | An-Nusrah Foundation',
   },
   {
     path:    PATHS.ZAKAT,
     element: <ZakatCalculatorPage />,
-    title:   'Zakat Calculator | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Zakat Calculator | An-Nusrah Foundation',
   },
   {
     path:    PATHS.GALLERY,
     element: <PhotoGalleryPage />,
-    title:   'Gallery | Madinatul Ulum Tahfijul Quran Madrasah',
-  },
-  {
-    path:    PATHS.TRANSPARENCY,
-    element: <TransparencyDashboardPage />,
-    title:   'Transparency | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Gallery | An-Nusrah Foundation',
   },
   {
     path:    PATHS.CONTACT,
     element: <ContactPage />,
-    title:   'Contact Us | Madinatul Ulum Tahfijul Quran Madrasah',
+    title:   'Contact Us | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.PAYMENT_SUCCESS,
+    element: <PaymentSuccessPage />,
+    title:   'Payment Success | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.PAYMENT_FAIL,
+    element: <PaymentFailPage />,
+    title:   'Payment Failed | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.PAYMENT_CANCEL,
+    element: <PaymentCancelPage />,
+    title:   'Payment Cancelled | An-Nusrah Foundation',
   },
 ];
 
