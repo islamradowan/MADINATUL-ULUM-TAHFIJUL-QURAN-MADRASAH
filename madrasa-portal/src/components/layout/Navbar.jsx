@@ -3,6 +3,8 @@ import { Link, useLocation }           from 'react-router-dom';
 import { PATHS }                       from '../../routes/paths';
 import { useLang }                     from '../../context/LanguageContext';
 
+// Updated: Removed unused DesktopNavLink component
+
 // ─── Nav link definitions ────────────────────────────────────────────────────
 // Exactly the 7 links the user requested, in order.
 const NAV_LINKS = [
@@ -30,33 +32,6 @@ function useIsActive() {
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
-
-/** Single desktop nav link */
-function DesktopNavLink({ to, label, active }) {
-  return (
-    <Link
-      to={to}
-      className={`
-        relative text-sm font-medium font-inter px-1 py-0.5
-        transition-colors duration-200
-        ${active
-          ? 'text-primary-container'
-          : 'text-slate-600 hover:text-primary-container'
-        }
-      `}
-    >
-      {label}
-      {/* Animated underline */}
-      <span
-        className={`
-          absolute -bottom-0.5 left-0 h-0.5 bg-amber-500 rounded-full
-          transition-all duration-200
-          ${active ? 'w-full' : 'w-0 group-hover:w-full'}
-        `}
-      />
-    </Link>
-  );
-}
 
 /** Language toggle pill — shows both options, highlights the active one */
 function LangToggle({ lang, onToggle, className = '' }) {
