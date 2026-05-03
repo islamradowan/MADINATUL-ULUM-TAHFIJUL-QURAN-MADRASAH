@@ -7,6 +7,15 @@ const store_id = process.env.SSLCOMMERZ_STORE_ID;
 const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD;
 const is_live = process.env.SSLCOMMERZ_IS_LIVE === 'true';
 
+// Hardcoded URLs - automatically detects local vs production
+const BACKEND_URL = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' 
+  ? 'https://madinatul-ulum-tahfijul-quran-madrasah.onrender.com' 
+  : 'http://localhost:5000');
+
+const FRONTEND_URL = process.env.FRONTEND_URL || (process.env.NODE_ENV === 'production' 
+  ? 'https://madinatul-ulum-tahfijul-quran-madra.vercel.app' 
+  : 'http://localhost:3000');
+
 // POST /api/payment/init
 const initPayment = async (req, res, next) => {
   try {
@@ -45,10 +54,10 @@ const initPayment = async (req, res, next) => {
       total_amount: Number(amount),
       currency: 'BDT',
       tran_id: transactionId,
-      success_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payment/success`,
-      fail_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payment/fail`,
-      cancel_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payment/cancel`,
-      ipn_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/payment/ipn`,
+      success_url: `${BACKEND_URL}/api/payment/success`,
+      fail_url: `${BACKEND_URL}/api/payment/fail`,
+      cancel_url: `${BACKEND_URL}/api/payment/cancel`,
+      ipn_url: `${BACKEND_URL}/api/payment/ipn`,
       product_name: type === 'donation' ? `Donation - ${projectType}` : `Zakat - ${allocationType}`,
       product_category: type,
       product_profile: 'non-physical-goods',
@@ -307,12 +316,12 @@ const handleSuccess = async (req, res) => {
     const transaction = await Transaction.findOne({ transactionId: tran_id });
     if (!transaction) {
       console.error('Transaction not found:', tran_id);
-      return res.redirect(`${process.env.FRONTEND_URL}/payment/fail?error=transaction_not_found`);
+      return res.redirect(`${FRONTEND_URL}/payment/fail?error=transaction_not_found`);
     }
 
     // If already successful, just redirect
     if (transaction.status === 'Success') {
-      return res.redirect(`${process.env.FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
+      return res.redirect(`${FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
     }
 
     // For sandbox, we can trust the callback if status is VALID/VALIDATED
@@ -347,7 +356,7 @@ const handleSuccess = async (req, res) => {
         console.log('Zakat created:', zakat._id);
       }
 
-      return res.redirect(`${process.env.FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
+      return res.redirect(`${FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
     }
 
     // For production, validate with SSLCommerz
@@ -387,17 +396,17 @@ const handleSuccess = async (req, res) => {
           await transaction.save();
         }
 
-        return res.redirect(`${process.env.FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
+        return res.redirect(`${FRONTEND_URL}/payment/success?tran_id=${tran_id}`);
       }
     }
 
     // If we reach here, validation failed
     transaction.status = 'Failed';
     await transaction.save();
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
   } catch (err) {
     console.error('Success handler error:', err);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail?error=validation_failed`);
+    res.redirect(`${FRONTEND_URL}/payment/fail?error=validation_failed`);
   }
 };
 
@@ -412,10 +421,10 @@ const handleFail = async (req, res) => {
       await transaction.save();
     }
 
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/fail?tran_id=${tran_id}`);
   } catch (err) {
     console.error('Fail handler error:', err);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/fail`);
+    res.redirect(`${FRONTEND_URL}/payment/fail`);
   }
 };
 
@@ -430,10 +439,10 @@ const handleCancel = async (req, res) => {
       await transaction.save();
     }
 
-    res.redirect(`${process.env.FRONTEND_URL}/payment/cancel?tran_id=${tran_id}`);
+    res.redirect(`${FRONTEND_URL}/payment/cancel?tran_id=${tran_id}`);
   } catch (err) {
     console.error('Cancel handler error:', err);
-    res.redirect(`${process.env.FRONTEND_URL}/payment/cancel`);
+    res.redirect(`${FRONTEND_URL}/payment/cancel`);
   }
 };
 
