@@ -4,9 +4,8 @@ const Donation = require('../models/Donation');
 const Zakat = require('../models/Zakat');
 
 // Hardcoded SSLCommerz credentials with fallback
-// Using official SSLCommerz sandbox test credentials
-const store_id = process.env.SSLCOMMERZ_STORE_ID || 'testbox';
-const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD || 'qwerty';
+const store_id = process.env.SSLCOMMERZ_STORE_ID || 'emoni69f6727ef01bb';
+const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD || 'emoni69f6727ef01bb@ssl';
 const is_live = process.env.SSLCOMMERZ_IS_LIVE === 'true' || false;
 
 // Hardcoded URLs - automatically detects local vs production
