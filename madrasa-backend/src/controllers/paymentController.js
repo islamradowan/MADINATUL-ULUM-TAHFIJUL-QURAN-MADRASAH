@@ -3,9 +3,10 @@ const Transaction = require('../models/Transaction');
 const Donation = require('../models/Donation');
 const Zakat = require('../models/Zakat');
 
-const store_id = process.env.SSLCOMMERZ_STORE_ID;
-const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD;
-const is_live = process.env.SSLCOMMERZ_IS_LIVE === 'true';
+// Hardcoded SSLCommerz credentials with fallback
+const store_id = process.env.SSLCOMMERZ_STORE_ID || 'emoni69f6727ef01bb';
+const store_passwd = process.env.SSLCOMMERZ_STORE_PASSWORD || 'emoni69f6727ef01bb@ssl';
+const is_live = process.env.SSLCOMMERZ_IS_LIVE === 'true' || false;
 
 // Hardcoded URLs - automatically detects local vs production
 const BACKEND_URL = process.env.BACKEND_URL || (process.env.NODE_ENV === 'production' 
@@ -22,6 +23,8 @@ const initPayment = async (req, res, next) => {
     const { type, amount, donorName, donorEmail, donorPhone, projectType, allocationType, paymentMethod } = req.body;
 
     console.log('Payment init request:', { type, amount, donorName, projectType, allocationType, paymentMethod });
+    console.log('Environment:', { NODE_ENV: process.env.NODE_ENV, BACKEND_URL, FRONTEND_URL });
+    console.log('SSLCommerz config:', { store_id, is_live });
 
     if (!['donation', 'zakat'].includes(type)) {
       return res.status(400).json({ message: 'Invalid payment type' });
