@@ -81,7 +81,7 @@ export default function IfterFundDonationPage() {
         <div className="relative bg-surface-base rounded-xl overflow-hidden shadow-ambient mb-12 border border-border-subtle">
           <div className="h-80 md:h-96 bg-primary-container relative overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?w=800&q=80"
+              src={require('../img/ifter.png')}
               alt="Iftar Distribution"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />

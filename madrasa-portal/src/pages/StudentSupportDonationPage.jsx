@@ -81,7 +81,7 @@ export default function StudentSupportDonationPage() {
         <div className="relative bg-surface-base rounded-xl overflow-hidden shadow-ambient mb-12 border border-border-subtle">
           <div className="h-80 md:h-96 bg-primary-container relative overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80"
+              src={require('../img/poor student.png')}
               alt="Poor Student Support"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />

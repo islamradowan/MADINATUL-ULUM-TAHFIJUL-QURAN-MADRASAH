@@ -82,7 +82,7 @@ export default function MadrasaDonationPage() {
         <div className="relative bg-surface-base rounded-xl overflow-hidden shadow-ambient mb-12 border border-border-subtle">
           <div className="h-80 md:h-96 bg-primary-container relative overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80"
+              src={require('../img/skill development.png')}
               alt="Skill Development Training"
               className="w-full h-full object-cover opacity-60 mix-blend-overlay"
             />

@@ -57,7 +57,7 @@ export default function HomePage() {
     'Masjid and Madrasha Complex': {
       goal: 2000000,
       to: PATHS.DONATE_MOSQUE,
-      img: 'https://images.unsplash.com/photo-1600814832809-579119f47045?w=800&q=80',
+      img: require('../img/madrasha complex.png'),
       title: t('campaignMasjidTitle'),
       desc: t('campaignMasjidDesc'),
       tag: t('campaignInfraTag'),
@@ -65,7 +65,7 @@ export default function HomePage() {
     'Poor Student Support': {
       goal: 150000,
       to: PATHS.DONATE_SUPPORT,
-      img: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',
+      img: require('../img/poor student.png'),
       title: t('campaignPoorStudentTitle'),
       desc: t('campaignPoorStudentDesc'),
       tag: t('campaignEducationTag'),
@@ -73,7 +73,7 @@ export default function HomePage() {
     'An Nusrah Skill Development': {
       goal: 200000,
       to: PATHS.DONATE_MADRASA,
-      img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80',
+      img: require('../img/skill development.png'),
       title: t('campaignSkillTitle'),
       desc: t('campaignSkillDesc'),
       tag: t('campaignSkillsTag'),
@@ -81,7 +81,7 @@ export default function HomePage() {
     'Ifter Fund': {
       goal: 100000,
       to: PATHS.DONATE_IFTER,
-      img: 'https://images.unsplash.com/photo-1610192244261-3f33de3f55e4?w=800&q=80',
+      img: require('../img/ifter.png'),
       title: t('campaignIfterTitle'),
       desc: t('campaignIfterDesc'),
       tag: t('campaignFoodTag'),
