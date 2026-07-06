@@ -10,7 +10,6 @@ const NAV_ITEMS = [
   { key: 'studentFinance', icon: 'account_balance_wallet',  to: PATHS.ADMIN.STUDENT_FINANCE },
   { key: 'programs',       icon: 'school',                  to: PATHS.ADMIN.PROGRAMS        },
   { key: 'adminDonations', icon: 'volunteer_activism',      to: PATHS.ADMIN.DONATIONS       },
-  { key: 'reports',        icon: 'bar_chart',               to: PATHS.ADMIN.REPORTS         },
   { key: 'language',       icon: 'translate',               to: PATHS.ADMIN.LANGUAGE        },
   { key: 'users',          icon: 'manage_accounts',         to: PATHS.ADMIN.USERS           },
   { key: 'settings',       icon: 'settings',                to: PATHS.ADMIN.SETTINGS        },

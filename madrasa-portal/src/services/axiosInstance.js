@@ -23,8 +23,14 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('madrasa_admin');
-      window.location.replace('/admin/login');
+      // Only redirect to login if the user was actually authenticated (had a token).
+      // Anonymous public visitors hitting protected endpoints should NOT be redirected.
+      const stored = localStorage.getItem('madrasa_admin');
+      const hadToken = stored ? Boolean(JSON.parse(stored)?.token) : false;
+      if (hadToken) {
+        localStorage.removeItem('madrasa_admin');
+        window.location.replace('/admin/login');
+      }
     }
     const message =
       error.response?.data?.message || error.message || 'Something went wrong';

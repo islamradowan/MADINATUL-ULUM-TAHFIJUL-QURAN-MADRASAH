@@ -1,11 +1,11 @@
 import { PATHS } from './paths';
+import { Navigate } from 'react-router-dom';
 import {
   AdminDashboardPage,
   StudentListPage,
   StudentDetailsPage,
   StudentFinancePage,
   DonationOverviewPage,
-  ReportsPage,
   SettingsPage,
   UserManagementPage,
   ExportReportPage,
@@ -47,8 +47,7 @@ const adminRoutes = [
   },
   {
     path:    PATHS.ADMIN.REPORTS,
-    element: <ReportsPage />,
-    title:   'Reports | An-Nusrah Foundation',
+    element: <Navigate to={PATHS.ADMIN.DASHBOARD} replace />,
   },
   {
     path:    PATHS.ADMIN.SETTINGS,

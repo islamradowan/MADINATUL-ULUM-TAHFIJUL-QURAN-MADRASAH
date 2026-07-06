@@ -3,32 +3,89 @@ import { Link, useLocation }           from 'react-router-dom';
 import { PATHS }                       from '../../routes/paths';
 import { useLang }                     from '../../context/LanguageContext';
 
-// Updated: Removed unused DesktopNavLink component
-
 // ─── Nav link definitions ────────────────────────────────────────────────────
-// Exactly the 7 links the user requested, in order.
 const NAV_LINKS = [
-  { labelKey: 'home',         to: PATHS.HOME         },
-  { labelKey: 'about',        to: PATHS.ABOUT        },
-  { labelKey: 'admission',    to: PATHS.ADMISSION    },
-  { labelKey: 'donations',    to: PATHS.DONATE       },
-  { labelKey: 'zakat',        to: PATHS.ZAKAT        },
-  { labelKey: 'gallery',      to: PATHS.GALLERY      },
-  { labelKey: 'contact',      to: PATHS.CONTACT      },
+  { labelKey: 'home',      to: PATHS.HOME      },
+  { labelKey: 'about',     to: PATHS.ABOUT     },
+  { labelKey: 'admission', to: PATHS.ADMISSION },
+  {
+    labelKey: 'give',
+    dropdown: [
+      { labelKey: 'donations', to: PATHS.DONATE, icon: 'volunteer_activism' },
+      { labelKey: 'zakat',     to: PATHS.ZAKAT,  icon: 'calculate'          },
+    ],
+  },
+  {
+    labelKey: 'islamicTools',
+    dropdown: [
+      { labelKey: 'prayerTimes',  to: PATHS.PRAYER_TIMES,  icon: 'schedule'      },
+      { labelKey: 'mosqueFinder', to: PATHS.MOSQUE_FINDER, icon: 'mosque'        },
+      { labelKey: 'qiblaCompass', to: PATHS.QIBLA,         icon: 'explore'       },
+      { labelKey: 'gallery',      to: PATHS.GALLERY,       icon: 'photo_library' },
+      { labelKey: 'library',      to: PATHS.LIBRARY,       icon: 'local_library' },
+    ],
+  },
+  { labelKey: 'contact', to: PATHS.CONTACT },
 ];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-/**
- * A link is "active" when:
- *  - it's the home route and pathname is exactly "/"
- *  - or the pathname starts with the link's path (handles /donate/madrasa → Donations)
- */
 function useIsActive() {
   const { pathname } = useLocation();
   return (to) =>
     to === PATHS.HOME
       ? pathname === '/'
       : pathname === to || pathname.startsWith(to + '/');
+}
+
+// ─── Desktop dropdown ────────────────────────────────────────────────────────
+function DesktopDropdown({ labelKey, items, isActive, t }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const anyActive = items.some((i) => isActive(i.to));
+
+  useEffect(() => {
+    function handler(e) { if (ref.current && !ref.current.contains(e.target)) setOpen(false); }
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className={`flex items-center gap-1 text-sm xl:text-base font-medium px-2 xl:px-4 py-2 rounded-lg transition-all duration-200 ${
+          anyActive || open
+            ? 'text-primary-container bg-emerald-50'
+            : 'text-slate-700 hover:text-primary-container hover:bg-emerald-50'
+        }`}
+      >
+        {t(labelKey)}
+        <span className={`material-symbols-outlined text-base transition-transform duration-200 ${open ? 'rotate-180' : ''}`}>
+          expand_more
+        </span>
+      </button>
+
+      {open && (
+        <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl shadow-ambient-lg border border-border-subtle z-50 overflow-hidden">
+          {items.map(({ labelKey: lk, to, icon }) => (
+            <Link
+              key={to}
+              to={to}
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium font-inter transition-colors ${
+                isActive(to)
+                  ? 'bg-emerald-50 text-primary-container font-semibold'
+                  : 'text-slate-700 hover:bg-emerald-50 hover:text-primary-container'
+              }`}
+            >
+              <span className="material-symbols-outlined text-base text-primary-container/70">{icon}</span>
+              {t(lk)}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -140,22 +197,29 @@ export default function Navbar() {
             className="hidden lg:flex items-center gap-1 xl:gap-2"
             aria-label="Main navigation"
           >
-            {NAV_LINKS.map(({ labelKey, to }) => (
-              <Link
-                key={to}
-                to={to}
-                className={`
-                  relative text-sm xl:text-base font-medium px-2 xl:px-4 py-2 rounded-lg
-                  transition-all duration-200
-                  ${isActive(to)
-                    ? 'text-primary-container bg-emerald-50'
-                    : 'text-slate-700 hover:text-primary-container hover:bg-emerald-50'
-                  }
-                `}
-              >
-                {t(labelKey)}
-              </Link>
-            ))}
+            {NAV_LINKS.map(({ labelKey, to, dropdown }) =>
+              dropdown ? (
+                <DesktopDropdown
+                  key={labelKey}
+                  labelKey={labelKey}
+                  items={dropdown}
+                  isActive={isActive}
+                  t={t}
+                />
+              ) : (
+                <Link
+                  key={to}
+                  to={to}
+                  className={`text-sm xl:text-base font-medium px-2 xl:px-4 py-2 rounded-lg transition-all duration-200 ${
+                    isActive(to)
+                      ? 'text-primary-container bg-emerald-50'
+                      : 'text-slate-700 hover:text-primary-container hover:bg-emerald-50'
+                  }`}
+                >
+                  {t(labelKey)}
+                </Link>
+              )
+            )}
           </nav>
 
           {/* ── Desktop actions ───────────────────────────────────────── */}
@@ -270,29 +334,47 @@ export default function Navbar() {
           className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1"
           aria-label="Mobile navigation"
         >
-          {NAV_LINKS.map(({ labelKey, to }) => {
+          {NAV_LINKS.map(({ labelKey, to, dropdown }) => {
+            if (dropdown) {
+              return (
+                <div key={labelKey}>
+                  <div className="px-4 pt-3 pb-1 text-[11px] font-bold uppercase tracking-widest text-slate-400 font-inter">
+                    {t(labelKey)}
+                  </div>
+                  {dropdown.map(({ labelKey: lk, to: dTo, icon }) => {
+                    const active = isActive(dTo);
+                    return (
+                      <Link
+                        key={dTo}
+                        to={dTo}
+                        onClick={() => setMenuOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium font-inter transition-colors duration-150 ${
+                          active
+                            ? 'bg-emerald-50 text-primary-container font-semibold'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-primary-container'
+                        }`}
+                      >
+                        <span className="material-symbols-outlined text-base text-primary-container/60">{icon}</span>
+                        {t(lk)}
+                      </Link>
+                    );
+                  })}
+                </div>
+              );
+            }
             const active = isActive(to);
             return (
               <Link
                 key={to}
                 to={to}
                 onClick={() => setMenuOpen(false)}
-                className={`
-                  flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium font-inter
-                  transition-colors duration-150
-                  ${active
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium font-inter transition-colors duration-150 ${
+                  active
                     ? 'bg-emerald-50 text-primary-container font-semibold'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-primary-container'
-                  }
-                `}
+                }`}
               >
-                {/* Active indicator dot */}
-                <span
-                  className={`
-                    w-1.5 h-1.5 rounded-full flex-shrink-0 transition-colors
-                    ${active ? 'bg-amber-500' : 'bg-transparent'}
-                  `}
-                />
+                <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${active ? 'bg-amber-500' : 'bg-transparent'}`} />
                 {t(labelKey)}
               </Link>
             );

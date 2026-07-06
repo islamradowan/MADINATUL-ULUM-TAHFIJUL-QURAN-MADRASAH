@@ -17,7 +17,7 @@ const NISAB_SILVER_BDT = NISAB_SILVER_GRAMS * SILVER_RATE_BDT; // ~৳67,360
 const NISAB_GOLD_BDT   = NISAB_GOLD_GRAMS   * GOLD_RATE_BDT;   // ~৳831,060
 
 // POST /api/zakat/calculate
-// Body: { cash, goldGrams, silverGrams, investments, businessGoods, receivables, debts }
+// Body: { cash, goldGrams, silverGrams, investments, businessGoods, receivables, debts, goldRateBDT? }
 const calculate = (req, res) => {
   const {
     cash         = 0,
@@ -27,10 +27,13 @@ const calculate = (req, res) => {
     businessGoods= 0,
     receivables  = 0,
     debts        = 0,
+    goldRateBDT,          // optional: live rate sent from frontend
   } = req.body;
 
+  const effectiveGoldRate = (Number(goldRateBDT) > 0) ? Number(goldRateBDT) : GOLD_RATE_BDT;
+
   // Convert gold & silver grams to BDT value
-  const goldValue   = Number(goldGrams)   * GOLD_RATE_BDT;
+  const goldValue   = Number(goldGrams)   * effectiveGoldRate;
   const silverValue = Number(silverGrams) * SILVER_RATE_BDT;
 
   // Total zakatable assets
@@ -55,7 +58,7 @@ const calculate = (req, res) => {
     zakatDue,
     zakatRate:       ZAKAT_RATE,
     rates: {
-      goldPerGram:   GOLD_RATE_BDT,
+      goldPerGram:   effectiveGoldRate,
       silverPerGram: SILVER_RATE_BDT,
     },
   });

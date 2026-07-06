@@ -14,6 +14,11 @@ import {
   PaymentSuccessPage,
   PaymentFailPage,
   PaymentCancelPage,
+  MosqueFinderPage,
+  QiblaCompassPage,
+  PrayerTimesPage,
+  IslamicLibraryPage,
+  BookReaderPage,
 } from './lazyPages';
 
 /**
@@ -90,6 +95,31 @@ const publicRoutes = [
     path:    PATHS.PAYMENT_CANCEL,
     element: <PaymentCancelPage />,
     title:   'Payment Cancelled | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.MOSQUE_FINDER,
+    element: <MosqueFinderPage />,
+    title:   'Nearby Mosques | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.QIBLA,
+    element: <QiblaCompassPage />,
+    title:   'Qibla Compass | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.PRAYER_TIMES,
+    element: <PrayerTimesPage />,
+    title:   'Prayer Times | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.LIBRARY,
+    element: <IslamicLibraryPage />,
+    title:   'Islamic Library | An-Nusrah Foundation',
+  },
+  {
+    path:    PATHS.BOOK_READ,
+    element: <BookReaderPage />,
+    title:   'Read Book | An-Nusrah Foundation',
   },
 ];
 

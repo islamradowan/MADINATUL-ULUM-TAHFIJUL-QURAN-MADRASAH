@@ -5,6 +5,7 @@ import { useLang } from '../../context/LanguageContext';
 const tabs = [
   { labelKey: 'home',      icon: 'mosque',             to: PATHS.HOME },
   { labelKey: 'donations', icon: 'volunteer_activism',  to: PATHS.DONATE },
+  { labelKey: 'library',   icon: 'local_library',       to: PATHS.LIBRARY },
   { labelKey: 'zakat',     icon: 'calculate',           to: PATHS.ZAKAT },
   { labelKey: 'contact',   icon: 'mail',                to: PATHS.CONTACT },
 ];

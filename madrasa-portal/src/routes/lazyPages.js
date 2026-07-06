@@ -16,6 +16,12 @@ export const IfterFundDonationPage         = lazy(() => import('../pages/IfterFu
 export const PaymentSuccessPage            = lazy(() => import('../pages/PaymentSuccessPage'));
 export const PaymentFailPage               = lazy(() => import('../pages/PaymentFailPage'));
 export const PaymentCancelPage             = lazy(() => import('../pages/PaymentCancelPage'));
+export const MosqueFinderPage              = lazy(() => import('../pages/MosqueFinderPage'));
+export const IslamicLibraryPage            = lazy(() => import('../pages/IslamicLibraryPage'));
+export const BookReaderPage                = lazy(() => import('../pages/BookReaderPage'));
+export const QiblaCompassPage              = lazy(() => import('../pages/QiblaCompassPage'));
+export const PrayerTimesPage               = lazy(() => import('../pages/PrayerTimesPage'));
+
 
 // ── Admin Pages ───────────────────────────────────────────────────────────────
 export const AdminLoginPage         = lazy(() => import('../pages/admin/AdminLoginPage'));
@@ -24,9 +30,8 @@ export const StudentListPage        = lazy(() => import('../pages/admin/StudentL
 export const StudentDetailsPage     = lazy(() => import('../pages/admin/StudentDetailsPage'));
 export const StudentFinancePage     = lazy(() => import('../pages/admin/StudentFinancePage'));
 export const DonationOverviewPage   = lazy(() => import('../pages/admin/DonationOverviewPage'));
-export const ReportsPage            = lazy(() => import('../pages/admin/ReportsPage'));
 export const SettingsPage           = lazy(() => import('../pages/admin/SettingsPage'));
-export const UserManagementPage     = lazy(() => import('../pages/admin/UserManagementPage'));
 export const ExportReportPage       = lazy(() => import('../pages/admin/ExportReportPage'));
+export const UserManagementPage     = lazy(() => import('../pages/admin/UserManagementPage'));
 export const LanguageManagementPage    = lazy(() => import('../pages/admin/LanguageManagementPage'));
 export const ProgramManagementPage     = lazy(() => import('../pages/admin/ProgramManagementPage'));

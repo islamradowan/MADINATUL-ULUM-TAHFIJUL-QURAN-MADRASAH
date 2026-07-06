@@ -18,7 +18,7 @@ function Spinner() {
 function KpiCard({ icon, iconBg, iconColor, label, value, sub, subColor, subIcon, growth }) {
   return (
     <div className="bg-surface-base rounded-xl p-6 shadow-ambient border border-border-subtle flex flex-col gap-3 relative overflow-hidden group hover:shadow-ambient-lg transition-shadow">
-      <div className="absolute top-0 right-0 w-24 h-24 bg-primary-fixed/10 rounded-bl-full -mr-6 -mt-6 group-hover:scale-110 transition-transform" />
+      <div className="absolute top-0 right-0 w-24 h-24 bg-primary-fixed rounded-bl-full -mr-6 -mt-6 group-hover:scale-110 transition-transform opacity-10" />
       <div className="flex items-center justify-between relative z-10">
         <div className={`w-11 h-11 rounded-lg ${iconBg} flex items-center justify-center ${iconColor}`}>
           <span className="material-symbols-outlined icon-fill">{icon}</span>
@@ -101,9 +101,6 @@ export default function AdminDashboardPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Link to="/admin/reports" className="flex items-center gap-2 bg-surface-base border border-border-subtle text-primary px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-surface-container-low transition-colors font-inter shadow-sm">
-            <span className="material-symbols-outlined text-sm">bar_chart</span>Reports
-          </Link>
           <Link to="/admin/reports/export" className="flex items-center gap-2 bg-primary-container text-white px-4 py-2.5 rounded-lg text-sm font-semibold hover:bg-primary transition-colors font-inter shadow-sm">
             <span className="material-symbols-outlined text-sm">download</span>Export
           </Link>

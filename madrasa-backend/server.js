@@ -9,11 +9,12 @@ const donationRoutes   = require('./src/routes/donations');
 const zakatRoutes      = require('./src/routes/zakat');
 const reportRoutes     = require('./src/routes/reports');
 const dashboardRoutes  = require('./src/routes/dashboard');
-const contactRoutes        = require('./src/routes/contact');
-const userRoutes           = require('./src/routes/users');
-const programRoutes        = require('./src/routes/programs');
-const paymentRoutes        = require('./src/routes/payment');
-const { errorHandler }     = require('./src/middleware/errorMiddleware');
+const contactRoutes    = require('./src/routes/contact');
+const userRoutes       = require('./src/routes/users');
+const programRoutes    = require('./src/routes/programs');
+const paymentRoutes    = require('./src/routes/payment');
+const goldRoutes       = require('./src/routes/gold');
+const { errorHandler } = require('./src/middleware/errorMiddleware');
 
 const app = express();
 
@@ -31,16 +32,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth',      authRoutes);
-app.use('/api/students',  studentRoutes);
-app.use('/api/donations', donationRoutes);
-app.use('/api/zakat',     zakatRoutes);
-app.use('/api/reports',   reportRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/contact',       contactRoutes);
-app.use('/api/users',         userRoutes);
-app.use('/api/programs',      programRoutes);
-app.use('/api/payment',       paymentRoutes);
+app.use('/api/auth',       authRoutes);
+app.use('/api/students',   studentRoutes);
+app.use('/api/donations',  donationRoutes);
+app.use('/api/zakat',      zakatRoutes);
+app.use('/api/reports',    reportRoutes);
+app.use('/api/dashboard',  dashboardRoutes);
+app.use('/api/contact',    contactRoutes);
+app.use('/api/users',      userRoutes);
+app.use('/api/programs',   programRoutes);
+app.use('/api/payment',    paymentRoutes);
+app.use('/api/gold-price', goldRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'OK' }));

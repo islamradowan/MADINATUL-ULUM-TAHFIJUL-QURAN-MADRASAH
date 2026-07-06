@@ -1,14 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { donationService, dashboardService } from '../services';
+import { donationService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
+import PrayerTimesWidget from '../components/shared/PrayerTimesWidget';
 
 export default function HomePage() {
   const { t } = useLang();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState(null);
+  const [stats, setStats] = useState({ totalStudents: 0, totalDonations: 0 });
   const [currentSlide, setCurrentSlide] = useState(0);
 
   // Refs for scroll animation
@@ -19,10 +20,14 @@ export default function HomePage() {
 
   useEffect(() => {
     donationService.getProjects()
-      .then(({ data }) => setProjects(data))
+      .then(({ data }) => {
+        setProjects(data);
+        // Derive public stats from project totals (no auth needed)
+        const total = data.reduce((s, p) => s + (p.raisedAmount ?? 0), 0);
+        setStats({ totalStudents: null, totalDonations: total });
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
-    dashboardService.getStats().then(({ data }) => setStats(data)).catch(() => {});
   }, []);
 
   // Scroll animation observer
@@ -126,38 +131,45 @@ export default function HomePage() {
         </div>
 
         <div className="container mx-auto px-4 md:px-6 max-w-container-max relative z-10">
-          <div className="max-w-3xl">
-            <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight font-ubuntu">
-              {t('heroLocation') === 'Barishal, Bangladesh' ? (
-                <>
-                  <span className="block">আন-নুসরাহ</span>
-                  <span className="block">ফাউন্ডেশন</span>
-                </>
-              ) : (
-                <>
-                  <span className="block">AN-NUSRAH</span>
-                  <span className="block">FOUNDATION</span>
-                </>
-              )}
-            </h1>
-            <p className="text-base lg:text-lg opacity-90 mb-8 leading-relaxed max-w-2xl font-ubuntu">
-              {t('heroDesc')}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link
-                to={PATHS.DONATE}
-                className="bg-secondary hover:bg-secondary/90 px-8 py-3 rounded-lg text-primary font-bold transition-all flex items-center gap-2 shadow-lg"
-              >
-                <span className="material-symbols-outlined icon-fill">volunteer_activism</span>
-                {t('donateNowBtn')}
-              </Link>
-              <Link
-                to={PATHS.ADMISSION}
-                className="bg-white/10 hover:bg-white hover:text-primary border border-white/20 px-8 py-3 rounded-lg text-white font-bold transition-all backdrop-blur-sm flex items-center gap-2"
-              >
-                <span className="material-symbols-outlined">info</span>
-                {t('admissionInfoBtn')}
-              </Link>
+          <div className="flex flex-col lg:flex-row items-start gap-10">
+            {/* Left: hero text */}
+            <div className="flex-1 max-w-2xl">
+              <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight font-ubuntu">
+                {t('heroLocation') === 'Barishal, Bangladesh' ? (
+                  <>
+                    <span className="block">আন-নুসরাহ</span>
+                    <span className="block">ফাউন্ডেশন</span>
+                  </>
+                ) : (
+                  <>
+                    <span className="block">AN-NUSRAH</span>
+                    <span className="block">FOUNDATION</span>
+                  </>
+                )}
+              </h1>
+              <p className="text-base lg:text-lg opacity-90 mb-8 leading-relaxed font-ubuntu">
+                {t('heroDesc')}
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  to={PATHS.DONATE}
+                  className="bg-secondary hover:bg-secondary/90 px-8 py-3 rounded-lg text-primary font-bold transition-all flex items-center gap-2 shadow-lg"
+                >
+                  <span className="material-symbols-outlined icon-fill">volunteer_activism</span>
+                  {t('donateNowBtn')}
+                </Link>
+                <Link
+                  to={PATHS.ADMISSION}
+                  className="bg-white/10 hover:bg-white hover:text-primary border border-white/20 px-8 py-3 rounded-lg text-white font-bold transition-all backdrop-blur-sm flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined">info</span>
+                  {t('admissionInfoBtn')}
+                </Link>
+              </div>
+            </div>
+            {/* Right: prayer times */}
+            <div className="w-full lg:w-80 flex-shrink-0">
+              <PrayerTimesWidget />
             </div>
           </div>
         </div>
@@ -335,13 +347,13 @@ export default function HomePage() {
               <div className="grid grid-cols-2 gap-8">
                 <div>
                   <div className="text-3xl font-extrabold text-secondary font-manrope">
-                    {stats ? `${stats.totalStudents}+` : '500+'}
+                    500+
                   </div>
                   <div className="text-xs uppercase tracking-widest font-bold opacity-60 font-inter">{t('statStudents')}</div>
                 </div>
                 <div>
                   <div className="text-3xl font-extrabold text-secondary font-manrope">
-                    {stats ? `৳${Number(stats.totalDonations).toLocaleString()}` : '৳0'}
+                    {`৳${Number(stats.totalDonations).toLocaleString()}`}
                   </div>
                   <div className="text-xs uppercase tracking-widest font-bold opacity-60 font-inter">{t('statDonations')}</div>
                 </div>

@@ -1,17 +1,19 @@
-import { useState } from 'react';
-import { zakatService, paymentService } from '../services';
+import { useState, useEffect } from 'react';
+import { zakatService, paymentService, goldService } from '../services';
 import { useLang } from '../context/LanguageContext';
 
-const GOLD_RATE   = 9500;
-const SILVER_RATE = 110;
+const SILVER_RATE        = 110;
 const NISAB_SILVER_GRAMS = 612.36;
-const NISAB_BDT   = NISAB_SILVER_GRAMS * SILVER_RATE;
+const NISAB_BDT          = NISAB_SILVER_GRAMS * SILVER_RATE;
+const VORI_IN_GRAMS      = 11.664;   // 1 vori = 11.664 grams (Bangladesh standard)
+const NISAB_SILVER_VORI  = NISAB_SILVER_GRAMS / VORI_IN_GRAMS; // ~52.5 vori
+const FALLBACK_GOLD_RATE = 9500;     // BDT per gram fallback
 
 function fmt(n) { return Number(n || 0).toLocaleString('en-BD', { maximumFractionDigits: 2 }); }
 
 export default function ZakatCalculatorPage() {
   const { t } = useLang();
-  const EMPTY = { cash: '', goldGrams: '', silverGrams: '', investments: '', businessGoods: '', receivables: '', debts: '' };
+  const EMPTY = { cash: '', goldVori: '', silverVori: '', investments: '', businessGoods: '', receivables: '', debts: '' };
 
   const ALLOCATIONS = [
     { key: 'Masjid and Madrasha Complex', icon: 'mosque', desc: 'Support construction of integrated Masjid and Madrasha complex' },
@@ -24,8 +26,8 @@ export default function ZakatCalculatorPage() {
 
   const ASSET_FIELDS = [
     { key: 'cash',         label: t('zakatFieldCash'),       hint: t('zakatFieldCashHint'),       icon: 'payments',        prefix: '৳', isDebt: false },
-    { key: 'goldGrams',    label: t('zakatFieldGold'),       hint: t('zakatFieldGoldHint'),       icon: 'diamond',         prefix: 'g', prefixRight: true, isDebt: false },
-    { key: 'silverGrams',  label: t('zakatFieldSilver'),     hint: t('zakatFieldSilverHint'),     icon: 'diamond',         prefix: 'g', prefixRight: true, isDebt: false },
+    { key: 'goldVori',     label: t('zakatFieldGold'),       hint: t('zakatFieldGoldHint'),       icon: 'diamond',         prefix: 'ভরি', prefixRight: true, isDebt: false },
+    { key: 'silverVori',   label: t('zakatFieldSilver'),     hint: t('zakatFieldSilverHint'),     icon: 'diamond',         prefix: 'ভরি', prefixRight: true, isDebt: false },
     { key: 'investments',  label: t('zakatFieldInvest'),     hint: t('zakatFieldInvestHint'),     icon: 'trending_up',     prefix: '৳', isDebt: false },
     { key: 'businessGoods',label: t('zakatFieldBusiness'),   hint: t('zakatFieldBusinessHint'),   icon: 'inventory_2',     prefix: '৳', isDebt: false },
     { key: 'receivables',  label: t('zakatFieldReceivable'), hint: t('zakatFieldReceivableHint'), icon: 'account_balance', prefix: '৳', isDebt: false },
@@ -40,11 +42,42 @@ export default function ZakatCalculatorPage() {
   const [donating, setDonating]     = useState(false);
   const [donated, setDonated]       = useState(false);
   const [donateErr, setDonateErr]   = useState('');
-  const [calculating, setCalculating] = useState(false);
+  const [calculating, setCalculating]   = useState(false);
+  const [goldRate, setGoldRate]           = useState(FALLBACK_GOLD_RATE);
+  const [goldRateLoading, setGoldRateLoading] = useState(true);
+  const [goldRateError, setGoldRateError] = useState(false);
+
+  // Fetch live gold price from our backend (key stays server-side)
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchGoldPrice() {
+      try {
+        const { data } = await goldService.getPrice();
+        if (!data?.ratePerGram) throw new Error();
+        if (!cancelled) {
+          setGoldRate(data.ratePerGram);
+          setGoldRateLoading(false);
+          setGoldRateError(data.source === 'fallback');
+        }
+      } catch {
+        if (!cancelled) {
+          setGoldRate(FALLBACK_GOLD_RATE);
+          setGoldRateLoading(false);
+          setGoldRateError(true);
+        }
+      }
+    }
+    fetchGoldPrice();
+    return () => { cancelled = true; };
+  }, []);
+
+  // Convert vori input to grams for all calculations
+  const goldGrams   = (parseFloat(assets.goldVori)   || 0) * VORI_IN_GRAMS;
+  const silverGrams = (parseFloat(assets.silverVori) || 0) * VORI_IN_GRAMS;
 
   // Live local preview (mirrors backend logic)
-  const goldValue   = (parseFloat(assets.goldGrams)   || 0) * GOLD_RATE;
-  const silverValue = (parseFloat(assets.silverGrams) || 0) * SILVER_RATE;
+  const goldValue   = goldGrams   * goldRate;
+  const silverValue = silverGrams * SILVER_RATE;
   const totalAssets = (parseFloat(assets.cash) || 0) + goldValue + silverValue +
                       (parseFloat(assets.investments) || 0) +
                       (parseFloat(assets.businessGoods) || 0) +
@@ -61,12 +94,13 @@ export default function ZakatCalculatorPage() {
     try {
       const { data } = await zakatService.calculate({
         cash:          parseFloat(assets.cash)         || 0,
-        goldGrams:     parseFloat(assets.goldGrams)    || 0,
-        silverGrams:   parseFloat(assets.silverGrams)  || 0,
+        goldGrams,
+        silverGrams,
         investments:   parseFloat(assets.investments)  || 0,
         businessGoods: parseFloat(assets.businessGoods)|| 0,
         receivables:   parseFloat(assets.receivables)  || 0,
         debts:         parseFloat(assets.debts)        || 0,
+        goldRateBDT:   goldRate,
       });
       setResult(data);
     } catch {
@@ -109,9 +143,23 @@ export default function ZakatCalculatorPage() {
       <section className="text-center max-w-3xl mx-auto space-y-4">
         <h1 className="text-4xl md:text-5xl font-bold font-manrope text-primary-container">{t('zakatPageTitle')}</h1>
         <p className="text-lg text-on-surface-variant font-inter">{t('zakatPageDesc')}</p>
-        <div className="inline-flex items-center gap-2 bg-charity-gold-light/60 px-4 py-2 rounded-full text-sm font-semibold text-secondary font-inter">
-          <span className="material-symbols-outlined text-sm">info</span>
-          {t('zakatNisabInfo')}: ৳{fmt(NISAB_BDT)} · {t('zakatRate')}
+        <div className="flex flex-wrap justify-center gap-2">
+          <div className="inline-flex items-center gap-2 bg-charity-gold-light/60 px-4 py-2 rounded-full text-sm font-semibold text-secondary font-inter">
+            <span className="material-symbols-outlined text-sm">info</span>
+            {t('zakatNisabInfo')}: ৳{fmt(NISAB_BDT)} · {t('zakatRate')}
+          </div>
+          <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold font-inter ${
+            goldRateLoading ? 'bg-gray-100 text-gray-400' :
+            goldRateError   ? 'bg-red-50 text-red-400' :
+            'bg-yellow-50 text-yellow-700'
+          }`}>
+            {goldRateLoading
+              ? <><span className="w-3 h-3 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin" />Loading gold price…</>
+              : goldRateError
+              ? <><span className="material-symbols-outlined text-sm">warning</span>Gold: ৳{fmt(goldRate)}/g (fallback)</>
+              : <><span className="material-symbols-outlined text-sm">trending_up</span>Live Gold: ৳{fmt(goldRate * VORI_IN_GRAMS)}/ভরি · ৳{fmt(goldRate)}/g</>
+            }
+          </div>
         </div>
       </section>
 
@@ -159,11 +207,15 @@ export default function ZakatCalculatorPage() {
                       )}
                     </div>
                     {/* Show converted BDT value for gold/silver */}
-                    {key === 'goldGrams' && parseFloat(assets.goldGrams) > 0 && (
-                      <p className="text-xs text-success-green mt-1 font-inter">≈ ৳{fmt(goldValue)} at ৳{GOLD_RATE}/g</p>
+                    {key === 'goldVori' && parseFloat(assets.goldVori) > 0 && (
+                      <p className="text-xs text-success-green mt-1 font-inter">
+                        {fmt(parseFloat(assets.goldVori))} ভরি = {fmt(goldGrams)}g · ≈ ৳{fmt(goldValue)} at ৳{fmt(goldRate * VORI_IN_GRAMS)}/ভরি
+                      </p>
                     )}
-                    {key === 'silverGrams' && parseFloat(assets.silverGrams) > 0 && (
-                      <p className="text-xs text-success-green mt-1 font-inter">≈ ৳{fmt(silverValue)} at ৳{SILVER_RATE}/g</p>
+                    {key === 'silverVori' && parseFloat(assets.silverVori) > 0 && (
+                      <p className="text-xs text-success-green mt-1 font-inter">
+                        {fmt(parseFloat(assets.silverVori))} ভরি = {fmt(silverGrams)}g · ≈ ৳{fmt(silverValue)} at ৳{fmt(SILVER_RATE * VORI_IN_GRAMS)}/ভরি
+                      </p>
                     )}
                     <p className="text-xs text-text-muted mt-1 font-inter">{hint}</p>
                   </div>
