@@ -5,8 +5,7 @@ import { useLang } from '../context/LanguageContext';
 const SILVER_RATE        = 110;
 const NISAB_SILVER_GRAMS = 612.36;
 const NISAB_BDT          = NISAB_SILVER_GRAMS * SILVER_RATE;
-const VORI_IN_GRAMS      = 11.664;   // 1 vori = 11.664 grams (Bangladesh standard)
-const NISAB_SILVER_VORI  = NISAB_SILVER_GRAMS / VORI_IN_GRAMS; // ~52.5 vori
+const VORI_IN_GRAMS      = 11.664;
 const FALLBACK_GOLD_RATE = 9500;     // BDT per gram fallback
 
 function fmt(n) { return Number(n || 0).toLocaleString('en-BD', { maximumFractionDigits: 2 }); }
