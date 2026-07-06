@@ -135,17 +135,8 @@ export default function HomePage() {
             {/* Left: hero text */}
             <div className="flex-1 max-w-2xl">
               <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight font-ubuntu">
-                {t('heroLocation') === 'Barishal, Bangladesh' ? (
-                  <>
-                    <span className="block">আন-নুসরাহ</span>
-                    <span className="block">ফাউন্ডেশন</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="block">AN-NUSRAH</span>
-                    <span className="block">FOUNDATION</span>
-                  </>
-                )}
+                <span className="block">{t('heroTitleLine1')}</span>
+                <span className="block">{t('heroTitleLine2')}</span>
               </h1>
               <p className="text-base lg:text-lg opacity-90 mb-8 leading-relaxed font-ubuntu">
                 {t('heroDesc')}

@@ -25,6 +25,8 @@ export const translations = {
     aboutCtaDonate:         'Donate Now',
     aboutCtaContact:        'Contact Us',
     // HomePage
+    heroTitleLine1:      'AN-NUSRAH',
+    heroTitleLine2:      'FOUNDATION',
     heroLocation:        'Barishal, Bangladesh',
     heroDesc:            'Islamic Education Institution based in Barishal, dedicated to nurturing minds with the light of the Quran and modern knowledge.',
     heroSubtitle:        'Empowering Communities Through Education and Charity',
@@ -551,6 +553,8 @@ export const translations = {
     aboutCtaDonate:         'এখনই দান করুন',
     aboutCtaContact:        'যোগাযোগ করুন',
     // HomePage
+    heroTitleLine1:      'আন-নুসরাহ',
+    heroTitleLine2:      'ফাউন্ডেশন',
     heroLocation:        'বরিশাল, বাংলাদেশ',
     heroDesc:            'বরিশালে অবস্থিত একটি ইসলামী শিক্ষা প্রতিষ্ঠান, যা কোরআনের আলো ও আধুনিক জ্ঞানে শিক্ষার্থীদের গড়ে তুলতে নিবেদিত।',
     heroSubtitle:        'শিক্ষা ও দানের মাধ্যমে সমাজকে ক্ষমতায়ন',
