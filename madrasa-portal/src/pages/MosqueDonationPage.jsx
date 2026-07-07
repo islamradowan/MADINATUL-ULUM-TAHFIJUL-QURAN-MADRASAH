@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
+import { useDonorAuth } from '../context/DonorAuthContext';
 
 const GOAL    = 2000000;
 const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function MosqueDonationPage() {
   const { t } = useLang();
+  const { donor } = useDonorAuth();
 
   const EXP_PCTS = [0.30, 0.35, 0.20, 0.15];
   const expenses = [
@@ -48,7 +50,7 @@ export default function MosqueDonationPage() {
         type: 'donation',
         amount: Number(amount),
         donorName: name || 'Anonymous',
-        donorEmail: '',
+        donorEmail: donor?.email || '',
         donorPhone: '',
         projectType: 'Masjid and Madrasha Complex',
         paymentMethod: method,

@@ -14,6 +14,7 @@ const userRoutes       = require('./src/routes/users');
 const programRoutes    = require('./src/routes/programs');
 const paymentRoutes    = require('./src/routes/payment');
 const goldRoutes       = require('./src/routes/gold');
+const donorRoutes      = require('./src/routes/donor');
 const { errorHandler } = require('./src/middleware/errorMiddleware');
 
 const app = express();
@@ -43,6 +44,7 @@ app.use('/api/users',      userRoutes);
 app.use('/api/programs',   programRoutes);
 app.use('/api/payment',    paymentRoutes);
 app.use('/api/gold-price', goldRoutes);
+app.use('/api/donor',      donorRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => res.json({ status: 'OK' }));

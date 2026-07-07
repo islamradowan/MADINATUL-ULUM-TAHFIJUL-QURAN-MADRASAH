@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
+import { useDonorAuth } from '../context/DonorAuthContext';
 
 const GOAL    = 200000;
 const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function MadrasaDonationPage() {
   const { t } = useLang();
+  const { donor } = useDonorAuth();
 
   const EXP_PCTS = [0.35, 0.30, 0.20, 0.15];
   const expenses = [
@@ -47,7 +49,7 @@ export default function MadrasaDonationPage() {
         type: 'donation',
         amount: Number(amount),
         donorName: name.trim() || 'Anonymous',
-        donorEmail: '',
+        donorEmail: donor?.email || '',
         donorPhone: '',
         projectType: 'An Nusrah Skill Development',
         paymentMethod: method,

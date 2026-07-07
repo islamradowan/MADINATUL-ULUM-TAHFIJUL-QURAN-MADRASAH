@@ -1,6 +1,7 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User     = require('./models/User');
+const Donor    = require('./models/Donor');
 const Student  = require('./models/Student');
 const Donation = require('./models/Donation');
 const Zakat    = require('./models/Zakat');
@@ -10,12 +11,16 @@ const seed = async () => {
   console.log('Connected to MongoDB');
 
   // Clear existing data
-  await Promise.all([User.deleteMany(), Student.deleteMany(), Donation.deleteMany(), Zakat.deleteMany()]);
+  await Promise.all([User.deleteMany(), Donor.deleteMany(), Student.deleteMany(), Donation.deleteMany(), Zakat.deleteMany()]);
   console.log('Cleared existing data');
 
-  // Master admin user (cannot be deleted or modified by anyone)
+  // Master admin user
   await User.create({ name: 'Admin', email: 'admin@madrasa.com', password: 'admin123', role: 'admin', isMaster: true });
   console.log('Master admin created — email: admin@madrasa.com | password: admin123');
+
+  // Demo donor account with sample donation history
+  await Donor.create({ name: 'Demo Donor', email: 'donor@madrasa.com', password: 'donor123', phone: '+880 1700 000000' });
+  console.log('Demo donor created — email: donor@madrasa.com | password: donor123');
 
   // Students
   await Student.insertMany([
@@ -42,53 +47,53 @@ const seed = async () => {
   ]);
   console.log('Students seeded');
 
-  // Donations
+  // Donations (some linked to demo donor)
   await Donation.insertMany([
-    { projectType: 'Masjid and Madrasha Complex', amount: 5000,  donorName: 'Ahmed Raza',        paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-24') },
-    { projectType: 'Poor Student Support',        amount: 1500,  donorName: 'Sarah Hussain',     paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-23') },
-    { projectType: 'An Nusrah Skill Development', amount: 10000, donorName: 'Tariq Jameel',      paymentMethod: 'Bank',   status: 'Completed', date: new Date('2024-10-22') },
-    { projectType: 'Masjid and Madrasha Complex', amount: 2500,  donorName: 'Anonymous',         paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-21') },
-    { projectType: 'Poor Student Support',        amount: 500,   donorName: 'Fatima Begum',      paymentMethod: 'Cash',   status: 'Completed', date: new Date('2024-10-20') },
-    { projectType: 'Ifter Fund',                  amount: 3000,  donorName: 'Mohammed Ali',      paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-19') },
-    { projectType: 'An Nusrah Skill Development', amount: 7500,  donorName: 'Khalid Rahman',     paymentMethod: 'Bank',   status: 'Completed', date: new Date('2024-10-18') },
-    { projectType: 'Poor Student Support',        amount: 2000,  donorName: 'Nusrat Jahan',      paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-17') },
-    { projectType: 'Masjid and Madrasha Complex', amount: 15000, donorName: 'Abdul Karim',       paymentMethod: 'Bank',   status: 'Completed', date: new Date('2024-10-16') },
-    { projectType: 'Poor Student Support',        amount: 1000,  donorName: 'Rashida Khanam',    paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-15') },
-    { projectType: 'An Nusrah Skill Development', amount: 3500,  donorName: 'Hafizur Islam',     paymentMethod: 'Cash',   status: 'Completed', date: new Date('2024-10-14') },
-    { projectType: 'Ifter Fund',                  amount: 5000,  donorName: 'Anonymous',         paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-13') },
-    { projectType: 'Poor Student Support',        amount: 750,   donorName: 'Sumaiya Akter',     paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-12') },
-    { projectType: 'Masjid and Madrasha Complex', amount: 12000, donorName: 'Mizanur Rahman',    paymentMethod: 'Bank',   status: 'Completed', date: new Date('2024-10-11') },
-    { projectType: 'Ifter Fund',                  amount: 4500,  donorName: 'Taslima Begum',     paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-10') },
-    { projectType: 'Poor Student Support',        amount: 2500,  donorName: 'Shahidul Haque',    paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-09') },
-    { projectType: 'An Nusrah Skill Development', amount: 6000,  donorName: 'Rokshana Parvin',   paymentMethod: 'Cash',   status: 'Completed', date: new Date('2024-10-08') },
-    { projectType: 'Masjid and Madrasha Complex', amount: 8000,  donorName: 'Aminul Islam',      paymentMethod: 'Bank',   status: 'Completed', date: new Date('2024-10-07') },
-    { projectType: 'Poor Student Support',        amount: 1200,  donorName: 'Moriam Sultana',    paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-06') },
-    { projectType: 'An Nusrah Skill Development', amount: 9000,  donorName: 'Shafiqul Alam',     paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-05') },
+    { projectType: 'Masjid and Madrasha Complex', amount: 5000,  donorName: 'Demo Donor',        donorEmail: 'donor@madrasa.com', paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-24') },
+    { projectType: 'Poor Student Support',        amount: 1500,  donorName: 'Demo Donor',        donorEmail: 'donor@madrasa.com', paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-23') },
+    { projectType: 'An Nusrah Skill Development', amount: 2500,  donorName: 'Demo Donor',        donorEmail: 'donor@madrasa.com', paymentMethod: 'Nagad',  status: 'Completed', date: new Date('2024-10-18') },
+    { projectType: 'Ifter Fund',                  amount: 1000,  donorName: 'Demo Donor',        donorEmail: 'donor@madrasa.com', paymentMethod: 'bKash',  status: 'Pending',   date: new Date('2024-10-10') },
+    { projectType: 'Poor Student Support',        amount: 750,   donorName: 'Demo Donor',        donorEmail: 'donor@madrasa.com', paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-09-15') },
+    { projectType: 'An Nusrah Skill Development', amount: 10000, donorName: 'Tariq Jameel',      donorEmail: '',                  paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-22') },
+    { projectType: 'Masjid and Madrasha Complex', amount: 2500,  donorName: 'Anonymous',         donorEmail: '',                  paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-21') },
+    { projectType: 'Poor Student Support',        amount: 500,   donorName: 'Fatima Begum',      donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-20') },
+    { projectType: 'Ifter Fund',                  amount: 3000,  donorName: 'Mohammed Ali',      donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-19') },
+    { projectType: 'An Nusrah Skill Development', amount: 7500,  donorName: 'Khalid Rahman',     donorEmail: '',                  paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-18') },
+    { projectType: 'Poor Student Support',        amount: 2000,  donorName: 'Nusrat Jahan',      donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-17') },
+    { projectType: 'Masjid and Madrasha Complex', amount: 15000, donorName: 'Abdul Karim',       donorEmail: '',                  paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-16') },
+    { projectType: 'Poor Student Support',        amount: 1000,  donorName: 'Rashida Khanam',    donorEmail: '',                  paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-15') },
+    { projectType: 'An Nusrah Skill Development', amount: 3500,  donorName: 'Hafizur Islam',     donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-14') },
+    { projectType: 'Ifter Fund',                  amount: 5000,  donorName: 'Anonymous',         donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-13') },
+    { projectType: 'Poor Student Support',        amount: 750,   donorName: 'Sumaiya Akter',     donorEmail: '',                  paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-12') },
+    { projectType: 'Masjid and Madrasha Complex', amount: 12000, donorName: 'Mizanur Rahman',    donorEmail: '',                  paymentMethod: 'Card',   status: 'Completed', date: new Date('2024-10-11') },
+    { projectType: 'Ifter Fund',                  amount: 4500,  donorName: 'Taslima Begum',     donorEmail: '',                  paymentMethod: 'Nagad',  status: 'Pending',   date: new Date('2024-10-10') },
+    { projectType: 'Poor Student Support',        amount: 2500,  donorName: 'Shahidul Haque',    donorEmail: '',                  paymentMethod: 'bKash',  status: 'Completed', date: new Date('2024-10-09') },
+    { projectType: 'An Nusrah Skill Development', amount: 6000,  donorName: 'Rokshana Parvin',   donorEmail: '',                  paymentMethod: 'Rocket', status: 'Completed', date: new Date('2024-10-08') },
   ]);
   console.log('Donations seeded');
 
   // Zakat
   await Zakat.insertMany([
-    { donorName: 'Mohammed Al-Rashid', totalAmount: 2500,  allocationType: 'Student Sponsorship',       paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-20') },
-    { donorName: 'Aisha Begum',        totalAmount: 750,   allocationType: 'General Fund',               paymentMethod: 'bKash', status: 'Pending',  date: new Date('2024-10-19') },
-    { donorName: 'Ibrahim Hassan',     totalAmount: 1200,  allocationType: 'Madrasa Maintenance',        paymentMethod: 'Card',  status: 'Verified', date: new Date('2024-10-18') },
-    { donorName: 'Khaleda Akter',      totalAmount: 3000,  allocationType: 'General Fund',               paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-17') },
-    { donorName: 'Rafiqul Islam',      totalAmount: 500,   allocationType: 'Islamic Education Materials', paymentMethod: 'bKash', status: 'Pending',  date: new Date('2024-10-16') },
-    { donorName: 'Nasrin Sultana',     totalAmount: 1800,  allocationType: 'Student Sponsorship',       paymentMethod: 'Nagad', status: 'Verified', date: new Date('2024-10-15') },
-    { donorName: 'Anonymous',          totalAmount: 4500,  allocationType: 'General Fund',               paymentMethod: 'Cash',  status: 'Verified', date: new Date('2024-10-14') },
-    { donorName: 'Shaheen Alam',       totalAmount: 900,   allocationType: 'Madrasa Maintenance',        paymentMethod: 'bKash', status: 'Pending',  date: new Date('2024-10-13') },
-    { donorName: 'Farhana Yesmin',     totalAmount: 2200,  allocationType: 'Student Sponsorship',       paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-12') },
-    { donorName: 'Nurul Huda',         totalAmount: 6000,  allocationType: 'General Fund',               paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-11') },
-    { donorName: 'Tahmina Begum',      totalAmount: 1100,  allocationType: 'Islamic Education Materials', paymentMethod: 'Card',  status: 'Pending',  date: new Date('2024-10-10') },
-    { donorName: 'Abul Kalam',         totalAmount: 3500,  allocationType: 'Madrasa Maintenance',        paymentMethod: 'bKash', status: 'Verified', date: new Date('2024-10-09') },
-    { donorName: 'Shirin Akter',       totalAmount: 800,   allocationType: 'Student Sponsorship',       paymentMethod: 'Nagad', status: 'Verified', date: new Date('2024-10-08') },
-    { donorName: 'Mozammel Haque',     totalAmount: 5000,  allocationType: 'General Fund',               paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-07') },
-    { donorName: 'Dilruba Khanam',     totalAmount: 1500,  allocationType: 'Islamic Education Materials', paymentMethod: 'Cash',  status: 'Pending',  date: new Date('2024-10-06') },
-    { donorName: 'Anisur Rahman',      totalAmount: 2800,  allocationType: 'Student Sponsorship',       paymentMethod: 'bKash', status: 'Verified', date: new Date('2024-10-05') },
-    { donorName: 'Kohinoor Begum',     totalAmount: 700,   allocationType: 'Madrasa Maintenance',        paymentMethod: 'Card',  status: 'Pending',  date: new Date('2024-10-04') },
-    { donorName: 'Mahbubur Rahman',    totalAmount: 4000,  allocationType: 'General Fund',               paymentMethod: 'Bank',  status: 'Verified', date: new Date('2024-10-03') },
-    { donorName: 'Selina Parvin',      totalAmount: 1300,  allocationType: 'Student Sponsorship',       paymentMethod: 'Nagad', status: 'Verified', date: new Date('2024-10-02') },
-    { donorName: 'Zahirul Islam',      totalAmount: 2100,  allocationType: 'Islamic Education Materials', paymentMethod: 'bKash', status: 'Pending',  date: new Date('2024-10-01') },
+    { donorName: 'Mohammed Al-Rashid', totalAmount: 2500,  allocationType: 'Student Sponsorship',        paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-20') },
+    { donorName: 'Aisha Begum',        totalAmount: 750,   allocationType: 'General Fund',                paymentMethod: 'bKash',  status: 'Pending',  date: new Date('2024-10-19') },
+    { donorName: 'Ibrahim Hassan',     totalAmount: 1200,  allocationType: 'Madrasa Maintenance',         paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-18') },
+    { donorName: 'Khaleda Akter',      totalAmount: 3000,  allocationType: 'General Fund',                paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-17') },
+    { donorName: 'Rafiqul Islam',      totalAmount: 500,   allocationType: 'Islamic Education Materials',  paymentMethod: 'bKash',  status: 'Pending',  date: new Date('2024-10-16') },
+    { donorName: 'Nasrin Sultana',     totalAmount: 1800,  allocationType: 'Student Sponsorship',        paymentMethod: 'Nagad',  status: 'Verified', date: new Date('2024-10-15') },
+    { donorName: 'Anonymous',          totalAmount: 4500,  allocationType: 'General Fund',                paymentMethod: 'Rocket', status: 'Verified', date: new Date('2024-10-14') },
+    { donorName: 'Shaheen Alam',       totalAmount: 900,   allocationType: 'Madrasa Maintenance',         paymentMethod: 'bKash',  status: 'Pending',  date: new Date('2024-10-13') },
+    { donorName: 'Farhana Yesmin',     totalAmount: 2200,  allocationType: 'Student Sponsorship',        paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-12') },
+    { donorName: 'Nurul Huda',         totalAmount: 6000,  allocationType: 'General Fund',                paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-11') },
+    { donorName: 'Tahmina Begum',      totalAmount: 1100,  allocationType: 'Islamic Education Materials',  paymentMethod: 'Card',   status: 'Pending',  date: new Date('2024-10-10') },
+    { donorName: 'Abul Kalam',         totalAmount: 3500,  allocationType: 'Madrasa Maintenance',         paymentMethod: 'bKash',  status: 'Verified', date: new Date('2024-10-09') },
+    { donorName: 'Shirin Akter',       totalAmount: 800,   allocationType: 'Student Sponsorship',        paymentMethod: 'Nagad',  status: 'Verified', date: new Date('2024-10-08') },
+    { donorName: 'Mozammel Haque',     totalAmount: 5000,  allocationType: 'General Fund',                paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-07') },
+    { donorName: 'Dilruba Khanam',     totalAmount: 1500,  allocationType: 'Islamic Education Materials',  paymentMethod: 'Rocket', status: 'Pending',  date: new Date('2024-10-06') },
+    { donorName: 'Anisur Rahman',      totalAmount: 2800,  allocationType: 'Student Sponsorship',        paymentMethod: 'bKash',  status: 'Verified', date: new Date('2024-10-05') },
+    { donorName: 'Kohinoor Begum',     totalAmount: 700,   allocationType: 'Madrasa Maintenance',         paymentMethod: 'Card',   status: 'Pending',  date: new Date('2024-10-04') },
+    { donorName: 'Mahbubur Rahman',    totalAmount: 4000,  allocationType: 'General Fund',                paymentMethod: 'Card',   status: 'Verified', date: new Date('2024-10-03') },
+    { donorName: 'Selina Parvin',      totalAmount: 1300,  allocationType: 'Student Sponsorship',        paymentMethod: 'Nagad',  status: 'Verified', date: new Date('2024-10-02') },
+    { donorName: 'Zahirul Islam',      totalAmount: 2100,  allocationType: 'Islamic Education Materials',  paymentMethod: 'bKash',  status: 'Pending',  date: new Date('2024-10-01') },
   ]);
   console.log('Zakat seeded');
 

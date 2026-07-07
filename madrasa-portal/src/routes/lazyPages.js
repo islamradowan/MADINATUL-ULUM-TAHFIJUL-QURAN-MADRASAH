@@ -23,6 +23,10 @@ export const QiblaCompassPage              = lazy(() => import('../pages/QiblaCo
 export const PrayerTimesPage               = lazy(() => import('../pages/PrayerTimesPage'));
 
 
+// ── Donor Pages ─────────────────────────────────────────────────────────────
+export const DonorLoginPage     = lazy(() => import('../pages/donor/DonorLoginPage'));
+export const DonorDashboardPage = lazy(() => import('../pages/donor/DonorDashboardPage'));
+
 // ── Admin Pages ───────────────────────────────────────────────────────────────
 export const AdminLoginPage         = lazy(() => import('../pages/admin/AdminLoginPage'));
 export const AdminDashboardPage     = lazy(() => import('../pages/admin/AdminDashboardPage'));

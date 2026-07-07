@@ -21,6 +21,12 @@ export const PATHS = {
   PAYMENT_CANCEL:  '/payment/cancel',
   NOT_FOUND:       '*',
 
+  // ── Donor ────────────────────────────────────────────────
+  DONOR: {
+    LOGIN:     '/donor/login',
+    DASHBOARD: '/donor/dashboard',
+  },
+
   // ── Admin ────────────────────────────────────────────────
   ADMIN: {
     LOGIN:           '/admin/login',

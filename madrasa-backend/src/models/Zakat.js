@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const zakatSchema = new mongoose.Schema({
+  donorId:        { type: mongoose.Schema.Types.ObjectId, ref: 'Donor' },
   donorName:      { type: String, default: 'Anonymous' },
+  donorEmail:     { type: String, default: '' },
   totalAmount:    { type: Number, required: true },
   allocationType: { type: String, required: true },
   projectType:    { type: String },

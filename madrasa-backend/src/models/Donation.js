@@ -8,6 +8,7 @@ const donationSchema = new mongoose.Schema({
   },
   amount:        { type: Number, required: true },
   donorName:     { type: String, default: 'Anonymous' },
+  donorEmail:    { type: String, default: '' },
   paymentMethod: { type: String, enum: ['Card', 'bKash', 'Nagad', 'Rocket'], default: 'Card' },
   status:        { type: String, enum: ['Completed', 'Pending', 'Failed'], default: 'Completed' },
   date:          { type: Date, default: Date.now },

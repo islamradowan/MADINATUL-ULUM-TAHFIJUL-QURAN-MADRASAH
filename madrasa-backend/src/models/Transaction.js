@@ -16,6 +16,7 @@ const transactionSchema = new mongoose.Schema({
   bankTranId:     { type: String },
   
   // Donor info
+  donorId:        { type: mongoose.Schema.Types.ObjectId, ref: 'Donor' },
   donorName:      { type: String, default: 'Anonymous' },
   donorEmail:     { type: String },
   donorPhone:     { type: String },

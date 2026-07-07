@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
+import { useDonorAuth } from '../context/DonorAuthContext';
 
 const GOAL    = 150000;
 const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function StudentSupportDonationPage() {
   const { t } = useLang();
+  const { donor } = useDonorAuth();
 
   const ALLOC_PCTS = [0.50, 0.30, 0.20];
   const allocations = [
@@ -46,9 +48,7 @@ export default function StudentSupportDonationPage() {
         type: 'donation',
         amount: Number(amount),
         donorName: name || 'Anonymous',
-        donorEmail: '',
-        donorPhone: '',
-        projectType: 'Poor Student Support',
+        donorEmail: donor?.email || '',
         paymentMethod: method,
       });
       if (data.gatewayUrl) window.location.href = data.gatewayUrl;

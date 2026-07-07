@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 import { donationService, paymentService } from '../services';
 import { PATHS } from '../routes/paths';
 import { useLang } from '../context/LanguageContext';
+import { useDonorAuth } from '../context/DonorAuthContext';
 
 const GOAL    = 100000;
 const METHODS = ['Card', 'bKash', 'Nagad', 'Rocket'];
 
 export default function IfterFundDonationPage() {
   const { t } = useLang();
+  const { donor } = useDonorAuth();
 
   const EXP_PCTS = [0.50, 0.30, 0.20];
   const expenses = [
@@ -46,7 +48,7 @@ export default function IfterFundDonationPage() {
         type: 'donation',
         amount: Number(amount),
         donorName: name || 'Anonymous',
-        donorEmail: '',
+        donorEmail: donor?.email || '',
         donorPhone: '',
         projectType: 'Ifter Fund',
         paymentMethod: method,

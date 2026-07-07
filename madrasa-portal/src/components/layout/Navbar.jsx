@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation }           from 'react-router-dom';
 import { PATHS }                       from '../../routes/paths';
 import { useLang }                     from '../../context/LanguageContext';
+import { useDonorAuth }                from '../../context/DonorAuthContext';
 
 // ─── Nav link definitions ────────────────────────────────────────────────────
 const NAV_LINKS = [
@@ -136,6 +137,7 @@ export default function Navbar() {
   const isActive                  = useIsActive();
   const { pathname }              = useLocation();
   const drawerRef                 = useRef(null);
+  const donorAuth                 = useDonorAuth();
 
   // Close drawer on route change (back/forward navigation included)
   useEffect(() => {
@@ -225,6 +227,24 @@ export default function Navbar() {
           {/* ── Desktop actions ───────────────────────────────────────── */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3 flex-shrink-0">
             <LangToggle lang={lang} onToggle={toggleLang} />
+
+            {donorAuth.isAuthenticated ? (
+              <Link
+                to={PATHS.DONOR.DASHBOARD}
+                className="flex items-center gap-1.5 px-3 xl:px-4 py-2 rounded-lg text-sm font-semibold font-inter text-primary-container border border-primary-container hover:bg-emerald-50 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">account_circle</span>
+                My Donations
+              </Link>
+            ) : (
+              <Link
+                to={PATHS.DONOR.LOGIN}
+                className="flex items-center gap-1.5 px-3 xl:px-4 py-2 rounded-lg text-sm font-semibold font-inter text-primary-container border border-primary-container hover:bg-emerald-50 transition-colors"
+              >
+                <span className="material-symbols-outlined text-sm">login</span>
+                Donor Login
+              </Link>
+            )}
 
             <Link
               to={PATHS.DONATE}
@@ -383,6 +403,25 @@ export default function Navbar() {
 
         {/* Drawer footer — CTA */}
         <div className="px-5 py-5 border-t border-emerald-100 space-y-3">
+          {donorAuth.isAuthenticated ? (
+            <Link
+              to={PATHS.DONOR.DASHBOARD}
+              onClick={() => setMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 border border-primary-container text-primary-container py-3 rounded-xl text-sm font-semibold font-inter hover:bg-emerald-50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">account_circle</span>
+              My Donations
+            </Link>
+          ) : (
+            <Link
+              to={PATHS.DONOR.LOGIN}
+              onClick={() => setMenuOpen(false)}
+              className="w-full flex items-center justify-center gap-2 border border-primary-container text-primary-container py-3 rounded-xl text-sm font-semibold font-inter hover:bg-emerald-50 transition-colors"
+            >
+              <span className="material-symbols-outlined text-base">login</span>
+              Donor Login
+            </Link>
+          )}
           <Link
             to={PATHS.DONATE}
             onClick={() => setMenuOpen(false)}

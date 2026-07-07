@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { zakatService, paymentService, goldService } from '../services';
 import { useLang } from '../context/LanguageContext';
+import { useDonorAuth } from '../context/DonorAuthContext';
 
 const SILVER_RATE        = 110;
 const NISAB_SILVER_GRAMS = 612.36;
@@ -12,6 +13,7 @@ function fmt(n) { return Number(n || 0).toLocaleString('en-BD', { maximumFractio
 
 export default function ZakatCalculatorPage() {
   const { t } = useLang();
+  const { donor } = useDonorAuth();
   const EMPTY = { cash: '', goldVori: '', silverVori: '', investments: '', businessGoods: '', receivables: '', debts: '' };
 
   const ALLOCATIONS = [
@@ -38,6 +40,11 @@ export default function ZakatCalculatorPage() {
   const [allocation, setAllocation] = useState('Masjid and Madrasha Complex');
   const [method, setMethod]         = useState('Card');
   const [donorName, setDonorName]   = useState('');
+
+  // Pre-fill donor name if logged in
+  useEffect(() => {
+    if (donor?.name) setDonorName(donor.name);
+  }, [donor]);
   const [donating, setDonating]     = useState(false);
   const [donated, setDonated]       = useState(false);
   const [donateErr, setDonateErr]   = useState('');
@@ -119,8 +126,9 @@ export default function ZakatCalculatorPage() {
         type: 'zakat',
         amount,
         donorName: donorName.trim() || 'Anonymous',
-        donorEmail: '',
-        donorPhone: '',
+        donorEmail: donor?.email || '',
+        donorPhone: donor?.phone || '',
+        donorId: donor?.id || undefined,
         allocationType: allocation,
         projectType: allocation,
         paymentMethod: method,

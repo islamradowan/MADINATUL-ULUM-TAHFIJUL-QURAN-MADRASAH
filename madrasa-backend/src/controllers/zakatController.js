@@ -67,14 +67,16 @@ const calculate = (req, res) => {
 // POST /api/zakat/donate
 const donate = async (req, res, next) => {
   try {
-    const { donorName, totalAmount, allocationType, projectType, paymentMethod } = req.body;
+    const { donorName, donorEmail, donorId, totalAmount, allocationType, projectType, paymentMethod } = req.body;
     if (!totalAmount || Number(totalAmount) <= 0)
       return res.status(400).json({ message: 'Invalid zakat amount' });
     if (!allocationType)
       return res.status(400).json({ message: 'Allocation type is required' });
 
     const zakat = await Zakat.create({
+      donorId:       donorId || undefined,
       donorName:     donorName || 'Anonymous',
+      donorEmail:    donorEmail || '',
       totalAmount:   Number(totalAmount),
       allocationType,
       projectType:   projectType || undefined,
