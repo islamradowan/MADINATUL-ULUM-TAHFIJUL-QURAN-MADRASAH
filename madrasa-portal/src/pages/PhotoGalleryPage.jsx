@@ -2,36 +2,28 @@ import { useState } from 'react';
 import { useLang } from '../context/LanguageContext';
 
 const ALL_IMAGES = [
-  // ── Quran Learning (6 total) ──────────────────────────────────────────────
-  { id: 1,  src: 'https://images.unsplash.com/photo-1542816417-0983c9c9ad53?w=800&q=80',  tag: 'Quran Learning', title: 'Annual Hifz Graduation Ceremony',    desc: 'Celebrating the remarkable achievement of our young scholars completing the Holy Quran.' },
-  { id: 2,  src: 'https://images.unsplash.com/photo-1585036156171-384164a8c675?w=800&q=80',  tag: 'Quran Learning', title: 'Morning Quran Recitation',            desc: 'Students begin each day with the blessed recitation of the Holy Quran.' },
-  { id: 9,  src: 'https://images.unsplash.com/photo-1519817914152-22d216bb9170?w=800&q=80',  tag: 'Quran Learning', title: 'Quran Completion Celebration',         desc: 'A joyful milestone as students complete their Quran memorisation journey.' },
-  { id: 19, src: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=800&q=80',  tag: 'Quran Learning', title: 'Tajweed & Pronunciation Class',        desc: 'Mastering the rules of Tajweed under the guidance of expert Quran teachers.' },
-  { id: 20, src: 'https://images.unsplash.com/photo-1564769662533-4f00a87b4056?w=800&q=80',  tag: 'Quran Learning', title: 'Hifz Programme Dedication',            desc: 'Young students committed to memorising the entire Holy Quran.' },
-  { id: 21, src: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=800&q=80',  tag: 'Quran Learning', title: 'Quran Circle & Group Study',           desc: 'Students revising their memorisation together in a supportive circle.' },
+  // ── Quran Learning ────────────────────────────────────────────────────────
+  { id: 1,  src: '/Gallery/cahiwak-quran-6114877.jpg',          tag: 'Quran Learning', title: 'Annual Hifz Graduation Ceremony',  desc: 'Celebrating the remarkable achievement of our young scholars completing the Holy Quran.' },
+  { id: 2,  src: '/Gallery/freebiespic-quran-4178711.jpg',      tag: 'Quran Learning', title: 'Morning Quran Recitation',         desc: 'Students begin each day with the blessed recitation of the Holy Quran.' },
+  { id: 3,  src: '/Gallery/joko_narimo-al-quran-7737590.jpg',   tag: 'Quran Learning', title: 'Quran Circle & Group Study',       desc: 'Students revising their memorisation together in a supportive circle.' },
 
-  // ── Classroom (6 total) ───────────────────────────────────────────────────
-  { id: 6,  src: 'https://images.unsplash.com/photo-1681140965121-a9e3689e28c3?w=800&q=80',  tag: 'Classroom',      title: 'Madrasa Learning Environment',       desc: 'Our well-equipped classrooms foster focused and disciplined learning.' },
-  { id: 11, src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',  tag: 'Classroom',      title: 'Arabic Language Class',              desc: 'Learning the language of the Quran — Arabic grammar and vocabulary.' },
-  { id: 12, src: 'https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=800&q=80',  tag: 'Classroom',      title: 'Fiqh & Islamic Jurisprudence',       desc: 'Advanced students studying classical Islamic jurisprudence texts.' },
-  { id: 13, src: 'https://images.unsplash.com/photo-1597733336794-12d05021d510?w=800&q=80',  tag: 'Classroom',      title: 'Hadith Studies',                     desc: 'Exploring the sayings and traditions of the Prophet ﷺ.' },
-  { id: 22, src: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&q=80',  tag: 'Classroom',      title: 'Islamic Studies Lesson',             desc: 'Students attentively engaged in their daily Islamic studies curriculum.' },
-  { id: 23, src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80',  tag: 'Classroom',      title: 'Tafseer & Quran Interpretation',     desc: 'Deep study of the meanings and interpretation of the Holy Quran.' },
+  // ── Classroom ─────────────────────────────────────────────────────────────
+  { id: 4,  src: '/Gallery/chidioc-kid-1077793.jpg',                                                          tag: 'Classroom',      title: 'Madrasa Learning Environment',       desc: 'Our well-equipped classrooms foster focused and disciplined learning.' },
+  { id: 5,  src: '/Gallery/mdjihadhossen-islam-8519137.jpg',                                                  tag: 'Classroom',      title: 'Islamic Studies Lesson',             desc: 'Students attentively engaged in their daily Islamic studies curriculum.' },
+  { id: 10, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020b.jpg',  tag: 'Classroom',      title: 'Madrasa Students in Class',          desc: 'Bangladeshi madrasa students engaged in their daily religious education.' },
+  { id: 11, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020c.jpg',  tag: 'Classroom',      title: 'Islamic Religious School',           desc: 'Students studying Islamic sciences in a traditional madrasa setting.' },
+  { id: 12, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020g.jpg',  tag: 'Classroom',      title: 'Group Learning Session',             desc: 'Students learning together in a collaborative and focused environment.' },
+  { id: 13, src: '/Gallery/Muslim-students-discuss-b-007.avif',                                               tag: 'Classroom',      title: 'Student Discussion & Debate',        desc: 'Muslim students engaged in scholarly discussion and academic debate.' },
 
-  // ── Events (5 total) ─────────────────────────────────────────────────────
-  { id: 3,  src: 'https://images.unsplash.com/photo-1600814832809-579119f47045?w=800&q=80',  tag: 'Events',         title: 'Friday Jumu\'ah Prayers',            desc: 'Our community gathers every Friday for congregational prayers.' },
-  { id: 15, src: 'https://images.unsplash.com/photo-1542967139-b45bb326ec87?w=800&q=80',     tag: 'Events',         title: 'Annual Prize Giving Ceremony',       desc: 'Recognising academic excellence and outstanding Islamic character.' },
-  { id: 24, src: 'https://images.unsplash.com/photo-1519817914152-22d216bb9170?w=800&q=80',  tag: 'Events',         title: 'Eid Celebration & Gathering',        desc: 'Students and families come together to celebrate Eid with joy and gratitude.' },
-  { id: 25, src: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80',     tag: 'Events',         title: 'Ramadan Night Programme',            desc: 'Special Tarawih and Quran recitation events during the blessed month.' },
-  { id: 26, src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80',  tag: 'Events',         title: 'Islamic Knowledge Competition',      desc: 'Students competing in Quran recitation and Islamic knowledge quizzes.' },
+  // ── Events ────────────────────────────────────────────────────────────────
+  { id: 6,  src: '/Gallery/dinar_aulia-crowd-5560458.jpg',      tag: 'Events',         title: 'Community Gathering',             desc: 'Our community comes together for a blessed gathering of worship and learning.' },
+  { id: 7,  src: '/Gallery/its_nature_p-v-ramadan-8678086.png', tag: 'Events',         title: 'Ramadan Night Programme',         desc: 'Special Tarawih and Quran recitation events during the blessed month.' },
+  { id: 14, src: '/Gallery/20Bangladesh-superJumbo.jpg',        tag: 'Events',         title: 'Bangladesh Islamic Gathering',    desc: 'A large community gathering celebrating faith and unity in Bangladesh.' },
 
-  // ── Student Life (7 total) ────────────────────────────────────────────────
-  { id: 4,  src: 'https://images.unsplash.com/photo-1542967139-b45bb326ec87?w=800&q=80',     tag: 'Student Life',   title: 'Student Support Programme',         desc: 'Supporting students with resources, books, and financial assistance.' },
-  { id: 16, src: 'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=800&q=80',  tag: 'Student Life',   title: 'Community Iftar & Charity',         desc: 'Students participate in community service and charitable giving.' },
-  { id: 17, src: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=800&q=80',     tag: 'Student Life',   title: 'Residential Hostel Life',           desc: 'A structured, nurturing environment for boarding students.' },
-  { id: 18, src: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=800&q=80',  tag: 'Student Life',   title: 'Islamic Library & Research',        desc: 'Extensive collection of classical Islamic texts and academic resources.' },
-  { id: 27, src: 'https://images.unsplash.com/photo-1597733336794-12d05021d510?w=800&q=80',  tag: 'Student Life',   title: 'Campus Brotherhood & Bonding',      desc: 'Students building lifelong bonds of Islamic brotherhood on campus.' },
-  { id: 28, src: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&q=80',  tag: 'Student Life',   title: 'Morning Fajr & Daily Routine',      desc: 'Students begin each day with Fajr prayer and structured Islamic routine.' },
+  // ── Student Life ──────────────────────────────────────────────────────────
+  { id: 8,  src: '/Gallery/cuivie-morocco-357301.jpg',          tag: 'Student Life',   title: 'Islamic Architecture & Campus',   desc: 'The serene environment of our madrasa inspires learning and reflection.' },
+  { id: 9,  src: '/Gallery/saurabh_x_pro-islam-8744847.jpg',    tag: 'Student Life',   title: 'Campus Life & Brotherhood',       desc: 'Students building lifelong bonds of Islamic brotherhood on campus.' },
+  { id: 15, src: '/Gallery/Madrasa.webp',                       tag: 'Student Life',   title: 'Madrasa Campus',                  desc: 'The heart of our institution where students live, learn and grow together.' },
 ];
 
 const PAGE_SIZE = 6;
