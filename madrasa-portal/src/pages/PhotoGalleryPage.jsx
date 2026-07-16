@@ -3,27 +3,27 @@ import { useLang } from '../context/LanguageContext';
 
 const ALL_IMAGES = [
   // ── Quran Learning ────────────────────────────────────────────────────────
-  { id: 1,  src: '/Gallery/cahiwak-quran-6114877.jpg',          tag: 'Quran Learning', title: 'Annual Hifz Graduation Ceremony',  desc: 'Celebrating the remarkable achievement of our young scholars completing the Holy Quran.' },
-  { id: 2,  src: '/Gallery/freebiespic-quran-4178711.jpg',      tag: 'Quran Learning', title: 'Morning Quran Recitation',         desc: 'Students begin each day with the blessed recitation of the Holy Quran.' },
-  { id: 3,  src: '/Gallery/joko_narimo-al-quran-7737590.jpg',   tag: 'Quran Learning', title: 'Quran Circle & Group Study',       desc: 'Students revising their memorisation together in a supportive circle.' },
+  { id: 1,  src: 'https://i.ibb.co.com/rKCT46pF/cahiwak-quran-6114877.jpg',           tag: 'Quran Learning', title: 'Annual Hifz Graduation Ceremony', desc: 'Celebrating the remarkable achievement of our young scholars completing the Holy Quran.' },
+  { id: 2,  src: 'https://i.ibb.co.com/sJ2K5FnH/freebiespic-quran-4178711.jpg',       tag: 'Quran Learning', title: 'Morning Quran Recitation',        desc: 'Students begin each day with the blessed recitation of the Holy Quran.' },
+  { id: 3,  src: 'https://i.ibb.co.com/vxLxYYNs/joko-narimo-al-quran-7737590.jpg',    tag: 'Quran Learning', title: 'Quran Circle & Group Study',      desc: 'Students revising their memorisation together in a supportive circle.' },
 
   // ── Classroom ─────────────────────────────────────────────────────────────
-  { id: 4,  src: '/Gallery/chidioc-kid-1077793.jpg',                                                          tag: 'Classroom',      title: 'Madrasa Learning Environment',       desc: 'Our well-equipped classrooms foster focused and disciplined learning.' },
-  { id: 5,  src: '/Gallery/mdjihadhossen-islam-8519137.jpg',                                                  tag: 'Classroom',      title: 'Islamic Studies Lesson',             desc: 'Students attentively engaged in their daily Islamic studies curriculum.' },
-  { id: 10, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020b.jpg',  tag: 'Classroom',      title: 'Madrasa Students in Class',          desc: 'Bangladeshi madrasa students engaged in their daily religious education.' },
-  { id: 11, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020c.jpg',  tag: 'Classroom',      title: 'Islamic Religious School',           desc: 'Students studying Islamic sciences in a traditional madrasa setting.' },
-  { id: 12, src: '/Gallery/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020g.jpg',  tag: 'Classroom',      title: 'Group Learning Session',             desc: 'Students learning together in a collaborative and focused environment.' },
-  { id: 13, src: '/Gallery/Muslim-students-discuss-b-007.avif',                                               tag: 'Classroom',      title: 'Student Discussion & Debate',        desc: 'Muslim students engaged in scholarly discussion and academic debate.' },
+  { id: 4,  src: 'https://i.ibb.co.com/DPmnRq35/chidioc-kid-1077793.jpg',                                                          tag: 'Classroom', title: 'Madrasa Learning Environment', desc: 'Our well-equipped classrooms foster focused and disciplined learning.' },
+  { id: 5,  src: 'https://i.ibb.co.com/9k8qHGqZ/mdjihadhossen-islam-8519137.jpg',                                                  tag: 'Classroom', title: 'Islamic Studies Lesson',        desc: 'Students attentively engaged in their daily Islamic studies curriculum.' },
+  { id: 10, src: 'https://i.ibb.co.com/Lh899F3Z/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020b.jpg',  tag: 'Classroom', title: 'Madrasa Students in Class',     desc: 'Bangladeshi madrasa students engaged in their daily religious education.' },
+  { id: 11, src: 'https://i.ibb.co.com/bM16T3Kn/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020c.jpg', tag: 'Classroom', title: 'Islamic Religious School',      desc: 'Students studying Islamic sciences in a traditional madrasa setting.' },
+  { id: 12, src: 'https://i.ibb.co.com/xtmNqw6L/bangladeshi-muslim-students-madrasa-islamic-religious-school-440nw-8856020g.jpg', tag: 'Classroom', title: 'Group Learning Session',        desc: 'Students learning together in a collaborative and focused environment.' },
+  { id: 13, src: 'https://i.ibb.co.com/QvkFpyqY/Muslim-students-discuss-b-007.avif',                                              tag: 'Classroom', title: 'Student Discussion & Debate',  desc: 'Muslim students engaged in scholarly discussion and academic debate.' },
 
   // ── Events ────────────────────────────────────────────────────────────────
-  { id: 6,  src: '/Gallery/dinar_aulia-crowd-5560458.jpg',      tag: 'Events',         title: 'Community Gathering',             desc: 'Our community comes together for a blessed gathering of worship and learning.' },
-  { id: 7,  src: '/Gallery/its_nature_p-v-ramadan-8678086.png', tag: 'Events',         title: 'Ramadan Night Programme',         desc: 'Special Tarawih and Quran recitation events during the blessed month.' },
-  { id: 14, src: '/Gallery/20Bangladesh-superJumbo.jpg',        tag: 'Events',         title: 'Bangladesh Islamic Gathering',    desc: 'A large community gathering celebrating faith and unity in Bangladesh.' },
+  { id: 6,  src: 'https://i.ibb.co.com/1f1LKCjv/dinar-aulia-crowd-5560458.jpg',      tag: 'Events', title: 'Community Gathering',         desc: 'Our community comes together for a blessed gathering of worship and learning.' },
+  { id: 7,  src: 'https://i.ibb.co.com/4bC8YP1/its-nature-p-v-ramadan-8678086.png',  tag: 'Events', title: 'Ramadan Night Programme',      desc: 'Special Tarawih and Quran recitation events during the blessed month.' },
+  { id: 14, src: 'https://i.ibb.co.com/35wFFkfD/20-Bangladesh-super-Jumbo.jpg',       tag: 'Events', title: 'Bangladesh Islamic Gathering', desc: 'A large community gathering celebrating faith and unity in Bangladesh.' },
 
   // ── Student Life ──────────────────────────────────────────────────────────
-  { id: 8,  src: '/Gallery/cuivie-morocco-357301.jpg',          tag: 'Student Life',   title: 'Islamic Architecture & Campus',   desc: 'The serene environment of our madrasa inspires learning and reflection.' },
-  { id: 9,  src: '/Gallery/saurabh_x_pro-islam-8744847.jpg',    tag: 'Student Life',   title: 'Campus Life & Brotherhood',       desc: 'Students building lifelong bonds of Islamic brotherhood on campus.' },
-  { id: 15, src: '/Gallery/Madrasa.webp',                       tag: 'Student Life',   title: 'Madrasa Campus',                  desc: 'The heart of our institution where students live, learn and grow together.' },
+  { id: 8,  src: 'https://i.ibb.co.com/rW6dNqj/cuivie-morocco-357301.jpg',        tag: 'Student Life', title: 'Islamic Architecture & Campus', desc: 'The serene environment of our madrasa inspires learning and reflection.' },
+  { id: 9,  src: 'https://i.ibb.co.com/8DKz5N67/saurabh-x-pro-islam-8744847.jpg', tag: 'Student Life', title: 'Campus Life & Brotherhood',     desc: 'Students building lifelong bonds of Islamic brotherhood on campus.' },
+  { id: 15, src: 'https://i.ibb.co.com/Qv7Mcv5R/Madrasa.webp',                    tag: 'Student Life', title: 'Madrasa Campus',                desc: 'The heart of our institution where students live, learn and grow together.' },
 ];
 
 const PAGE_SIZE = 6;

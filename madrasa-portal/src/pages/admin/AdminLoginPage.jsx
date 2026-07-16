@@ -61,8 +61,8 @@ export default function AdminLoginPage() {
               <span className="material-symbols-outlined text-secondary-fixed text-2xl icon-fill">mosque</span>
             </div>
             <div className="leading-snug">
-              <p className="text-[11px] font-extrabold text-secondary-fixed font-manrope uppercase tracking-widest">Madinatul Ulum Tahfijul</p>
-              <p className="text-[11px] font-extrabold text-secondary-fixed font-manrope uppercase tracking-widest">Quran Madrasah</p>
+              <p className="text-[11px] font-extrabold text-secondary-fixed font-manrope uppercase tracking-widest">An-Nusrah</p>
+              <p className="text-[11px] font-extrabold text-secondary-fixed font-manrope uppercase tracking-widest">Foundation</p>
             </div>
           </Link>
         </div>
@@ -80,7 +80,7 @@ export default function AdminLoginPage() {
               with Ease
             </h1>
             <p className="text-base text-white/60 font-inter max-w-sm leading-relaxed">
-              A complete management system for Madinatul Ulum Tahfijul Quran Madrasah — students, donations, Zakat, and reports in one place.
+              A complete management system for An-Nusrah Foundation — students, donations, Zakat, and reports in one place.
             </p>
           </div>
 
@@ -114,7 +114,7 @@ export default function AdminLoginPage() {
             <div className="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-base icon-fill">mosque</span>
             </div>
-            <span className="text-sm font-bold text-primary-container font-manrope uppercase tracking-tight">Madinatul Ulum</span>
+            <span className="text-sm font-bold text-primary-container font-manrope uppercase tracking-tight">An-Nusrah Foundation</span>
           </Link>
           <span className="hidden lg:block text-sm text-text-muted font-inter">Admin Portal</span>
 
@@ -240,7 +240,7 @@ export default function AdminLoginPage() {
         {/* Footer */}
         <div className="px-8 py-4 border-t border-border-subtle flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-text-muted font-inter">
-            © {new Date().getFullYear()} Madinatul Ulum Tahfijul Quran Madrasah
+            © {new Date().getFullYear()} An-Nusrah Foundation
           </p>
           <div className="flex gap-4">
             {['Support', 'Privacy Policy'].map((l) => (
